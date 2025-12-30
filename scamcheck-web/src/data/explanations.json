@@ -1,0 +1,37 @@
+{
+  "urgent_language": {
+    "en": "Scammers use urgency to make you act without thinking. Real organizations rarely demand immediate action.",
+    "tr": "Dolandırıcılar düşünmeden hareket etmeniz için aciliyet hissi yaratır. Gerçek kurumlar nadiren anlık işlem talep eder.",
+    "de": "Betrüger nutzen Dringlichkeit, damit Sie unüberlegt handeln. Echte Organisationen verlangen selten sofortiges Handeln."
+  },
+  "financial_request": {
+    "en": "Requests for money or financial info are high-risk. Verify via official channels.",
+    "tr": "Para veya finansal bilgi talepleri yüksek risklidir. Resmi kanallardan doğrulayın.",
+    "de": "Geld- oder Finanzdatenanfragen sind risikoreich. Über offizielle Kanäle prüfen."
+  },
+  "suspicious_link": {
+    "en": "The link looks suspicious or uses a generic/misspelled domain.",
+    "tr": "Link şüpheli görünüyor veya jenerik/yanlış yazılmış bir alan adı kullanıyor.",
+    "de": "Der Link sieht verdächtig aus oder verwendet eine generische/falsch geschriebene Domain."
+  },
+  "blacklist_match": {
+    "en": "This domain is on a known blocklist of malicious sites.",
+    "tr": "Bu alan adı bilinen zararlı siteler kara listesinde.",
+    "de": "Diese Domain steht auf einer bekannten Blockliste für bösartige Seiten."
+  },
+  "new_domain": {
+    "en": "This domain was registered very recently (<30 days). Scammers often use new domains.",
+    "tr": "Bu alan adı çok yeni (<30 gün). Dolandırıcılar genellikle yeni alan adları kullanır.",
+    "de": "Diese Domain wurde erst kürzlich registriert (<30 Tage). Betrüger nutzen oft neue Domains."
+  },
+  "punycode": {
+    "en": "This URL uses special characters that look like normal letters to trick you (homograph attack).",
+    "tr": "Bu URL, sizi kandırmak için normal harflere benzeyen özel karakterler kullanıyor (homograf saldırısı).",
+    "de": "Diese URL verwendet Sonderzeichen, die wie normale Buchstaben aussehen, um Sie zu täuschen."
+  },
+  "ip_address": {
+    "en": "Legitimate services use domain names, not IP addresses.",
+    "tr": "Meşru servisler IP adresi değil, alan adı kullanır.",
+    "de": "Legitime Dienste verwenden Domainnamen, keine IP-Adressen."
+  }
+}

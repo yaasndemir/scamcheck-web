@@ -10,7 +10,12 @@
       "autoDetectUrl": "URL automatisch erkennen",
       "demoButton": "Demo",
       "invalidUrl": "Ungültige URL.",
-      "demoLoaded": "Demo erfolgreich geladen"
+      "demoLoaded": "Demo erfolgreich geladen",
+      "errorEmpty": "Bitte Text oder URL eingeben.",
+      "ocrTooBig": "Bild zu groß (max 5MB)",
+      "ocrInvalidType": "Ungültiger Bildtyp",
+      "ocrSuccess": "Text aus Bild extrahiert",
+      "ocrError": "Textextraktion fehlgeschlagen"
     },
     "results": {
       "riskScore": "Risikowert",
@@ -56,7 +61,8 @@
     "history": {
         "title": "Letzte Prüfungen",
         "clear": "Löschen",
-        "empty": "Keine aktuellen Prüfungen"
+        "empty": "Keine aktuellen Prüfungen",
+        "restoreNote": "Datenschutz: Nur Metadaten werden gespeichert, Inhalt kann nicht wiederhergestellt werden."
     },
     "rules": {
         "urgency": "Dringlichkeit erkannt",
@@ -88,7 +94,13 @@
         "port_in_url": "Nicht-Standard-Port",
         "login_keyword": "Login-Schlüsselwort in URL",
         "shortener": "URL-Shortener",
-        "mixed_script": "Gemischtes Skript (Homograph-Angriff)"
+        "mixed_script": "Gemischtes Skript (Homograph-Angriff)",
+        "blacklist_match": "Gesperrte Domain",
+        "new_domain": "Neue Domain (<30 Tage)",
+        "trusted_domain_match": "Vertrauenswürdige Domain",
+        "domain_mismatch": "URL stimmt nicht mit Text überein",
+        "url_has_at_symbol": "@ in URL",
+        "input_too_long": "Eingabe gekürzt (zu lang)"
     }
   }
 }
