@@ -65,32 +65,38 @@ export function analyzeText(text: string, locale: string = 'en'): AnalysisResult
 
   // Performance guard: truncate if too long
   const MAX_LENGTH = 10000;
+  let textToAnalyze = text;
   if (text.length >= MAX_LENGTH) {
-    return {
-      score: 0,
-      reasons: ["Input too long (>10,000 characters). Analysis aborted for performance."],
-      tags: ["error"]
-    };
+      textToAnalyze = text.slice(0, MAX_LENGTH);
+      reasons.push(`Input too long. Analyzed first ${MAX_LENGTH} characters.`);
+      tags.add("truncated");
   }
 
   // Normalize text for case-insensitive matching
-  const normalizedText = text.toLowerCase();
+  const normalizedText = textToAnalyze.toLowerCase();
 
   // Ensure locale exists in patterns, fallback to 'en' if not found
   // If 'en' is also missing (unlikely given our data), skip
   const targetLocale = ['en', 'tr', 'de'].includes(locale) ? locale : 'en';
 
+  let matchCount = 0;
+  const MAX_MATCHES = 25; // Circuit breaker
+
   for (const rule of rawRules.textRules) {
+      if (matchCount >= MAX_MATCHES) break;
+
     const patterns = rule.patterns[targetLocale] || rule.patterns['en'];
 
     if (!patterns) continue;
 
     for (const pattern of patterns) {
       // Simple inclusion check. For more advanced matching, we could use regex with word boundaries
+      // Note: This O(N*M) check is generally fine for < 10k chars and < 100 rules.
       if (normalizedText.includes(pattern.toLowerCase())) {
-        reasons.push(`Detected suspicious pattern: "${pattern}" (${rule.id})`);
+        reasons.push(`${rule.id}`); // Storing ID for i18n lookup later
         rule.tags.forEach(tag => tags.add(tag));
         totalSeverity += rule.severity;
+        matchCount++;
         break; // Count rule only once per text
       }
     }
@@ -118,7 +124,7 @@ export function analyzeUrl(url: string): AnalysisResult {
 
   for (const rule of compiledUrlRules) {
     if (rule.compiledRegex.test(url)) {
-      reasons.push(`Detected suspicious URL pattern: ${rule.id}`);
+      reasons.push(`${rule.id}`); // Store ID for i18n
       rule.tags.forEach(tag => tags.add(tag));
       totalSeverity += rule.severity;
     }

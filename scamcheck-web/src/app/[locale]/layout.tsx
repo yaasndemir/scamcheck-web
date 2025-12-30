@@ -18,8 +18,33 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ScamCheck Web",
-  description: "Analyze suspicious messages and URLs",
+  title: {
+      template: '%s | ScamCheck',
+      default: 'ScamCheck - Analyze Suspicious Messages & URLs',
+  },
+  description: "Secure, client-side analysis of suspicious texts and URLs. Detect scams instantly without compromising privacy.",
+  openGraph: {
+      title: 'ScamCheck - Analyze Suspicious Messages & URLs',
+      description: 'Secure, client-side analysis of suspicious texts and URLs. Detect scams instantly without compromising privacy.',
+      type: 'website',
+      siteName: 'ScamCheck',
+      locale: 'en_US',
+      images: [
+        {
+          url: '/og-image.png',
+          width: 1200,
+          height: 630,
+          alt: 'ScamCheck Preview',
+        }
+      ],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
 
 export default async function LocaleLayout({
@@ -44,10 +69,12 @@ export default async function LocaleLayout({
   return (
     <html lang={locale}>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50 text-gray-900`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-50 text-slate-900 min-h-screen selection:bg-blue-100 selection:text-blue-900`}
       >
         <NextIntlClientProvider messages={messages}>
-          <LanguageSwitcher />
+          <div className="absolute top-4 right-4 z-50">
+             <LanguageSwitcher />
+          </div>
           {children}
         </NextIntlClientProvider>
       </body>

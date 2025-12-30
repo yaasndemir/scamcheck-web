@@ -1,17 +1,20 @@
 {
   "HomePage": {
     "title": "ScamCheck",
-    "description": "Mesajları anında analiz et. Tehditleri güvenle tespit et.",
+    "description": "Mesajları anında analiz edin. Tehditleri güvenle tespit edin.",
     "inputSection": {
-      "placeholder": "Şüpheli mesajı buraya yapıştır...",
-      "urlPlaceholder": "İsteğe bağlı URL (örn. http://supheli-link.com)",
+      "placeholder": "Şüpheli mesajı buraya yapıştırın...",
+      "urlPlaceholder": "İsteğe bağlı URL (ör. http://supheli-link.com)",
       "analyzeButton": "Analiz Et",
       "analyzing": "Analiz ediliyor...",
-      "autoDetectUrl": "Mesajdaki URL'yi otomatik algıla",
-      "demoButton": "Demo"
+      "autoDetectUrl": "URL'yi mesajdan otomatik algıla",
+      "demoButton": "Demo",
+      "invalidUrl": "Geçersiz URL girildi.",
+      "demoLoaded": "Demo yüklendi"
     },
     "results": {
       "riskScore": "Risk Skoru",
+      "scoreTooltip": "Anahtar kelimeler, desenler ve URL analizine göre hesaplanmıştır.",
       "severity": {
         "low": "Düşük Risk",
         "medium": "Orta Risk",
@@ -20,18 +23,20 @@
       "whyFlagged": "Neden işaretlendi?",
       "tags": "Etiketler",
       "recommendedActions": "Önerilen İşlemler",
+      "share": "Raporu Paylaş",
+      "shareCopied": "Rapor özeti kopyalandı!",
       "actions": {
-        "block": "Göndereni derhal engelle.",
-        "delete": "Mesajı sil ve cevap verme.",
-        "report": "Spam/gereksiz olarak bildir.",
-        "noClick": "Hiçbir linke tıklama.",
-        "verify": "Resmi kanallardan doğrula."
+        "block": "Göndereni hemen engelleyin.",
+        "delete": "Mesajı silin ve yanıt vermeyin.",
+        "report": "Spam/gereksiz olarak bildirin.",
+        "noClick": "Hiçbir linke tıklamayın.",
+        "verify": "Resmi kanallardan doğrulayın."
       }
     },
     "safeReply": {
       "tabs": {
         "results": "Sonuçlar",
-        "safeReply": "Güvenli Cevap"
+        "safeReply": "Güvenli Yanıt"
       },
       "categories": {
         "bank": "Banka",
@@ -42,7 +47,48 @@
         "investment": "Yatırım"
       },
       "copy": "Kopyala",
-      "copied": "Pano'ya kopyalandı!"
+      "copied": "Panoya kopyalandı!"
+    },
+    "privacy": {
+        "note": "Analiz cihazınızda yapılır. Sunuculara veri gönderilmez.",
+        "short": "Cihaz içi güvenli analiz"
+    },
+    "history": {
+        "title": "Son Analizler",
+        "clear": "Temizle",
+        "empty": "Henüz analiz yok"
+    },
+    "rules": {
+        "urgency": "Aciliyet Tespiti",
+        "otp": "OTP İsteği",
+        "password_request": "Şifre İsteği",
+        "support_impersonation": "Destek Taklidi",
+        "gift_cards": "Hediye Kartı İsteği",
+        "iban_request": "IBAN İsteği",
+        "crypto": "Kripto İlgili",
+        "suspicious_link_text": "Şüpheli Link Metni",
+        "prize_winner": "Ödül/Çekiliş Dolandırıcılığı",
+        "family_emergency": "Aile Acil Durumu",
+        "job_offer": "İş Teklifi Dolandırıcılığı",
+        "unauthorized_login": "Yetkisiz Giriş Uyarısı",
+        "tax_refund": "Vergi İadesi Dolandırıcılığı",
+        "investment": "Yatırım Dolandırıcılığı",
+        "romance": "Romantik Dolandırıcılık",
+        "invoice": "Sahte Fatura",
+        "gov_impersonation": "Devlet Kurumu Taklidi",
+        "package_delivery": "Kargo Teslimat Dolandırıcılığı",
+        "generic_greeting": "Genel Selamlama",
+        "extortion": "Şantaj / Sextortion",
+        "ip_address_url": "IP Adresi URL'si",
+        "punycode": "Punycode (Gizleme)",
+        "at_symbol": "URL'de @ Sembolü",
+        "multiple_subdomains": "Çoklu Alt Alan Adı",
+        "suspicious_tld": "Şüpheli Alan Adı Uzantısı",
+        "double_extension": "Çift Dosya Uzantısı",
+        "port_in_url": "Standart Olmayan Port",
+        "login_keyword": "URL'de Giriş Kelimesi",
+        "shortener": "URL Kısaltıcı",
+        "mixed_script": "Karışık Karakter (Homograf Saldırısı)"
     }
   }
 }
