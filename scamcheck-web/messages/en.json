@@ -1,0 +1,13 @@
+{
+  "HomePage": {
+    "title": "ScamCheck Web",
+    "description": "Analyze suspicious messages and URLs to stay safe.",
+    "messagePlaceholder": "Paste the suspicious message here...",
+    "urlPlaceholder": "Enter the URL to check...",
+    "messageLabel": "Message",
+    "urlLabel": "URL",
+    "analyzeButton": "Analyze",
+    "resultTitle": "Analysis Results",
+    "noResults": "No analysis performed yet."
+  }
+}

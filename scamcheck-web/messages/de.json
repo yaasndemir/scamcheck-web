@@ -1,0 +1,13 @@
+{
+  "HomePage": {
+    "title": "ScamCheck Web",
+    "description": "Analysieren Sie verdächtige Nachrichten und URLs, um sicher zu bleiben.",
+    "messagePlaceholder": "Fügen Sie die verdächtige Nachricht hier ein...",
+    "urlPlaceholder": "Geben Sie die URL ein...",
+    "messageLabel": "Nachricht",
+    "urlLabel": "URL",
+    "analyzeButton": "Analysieren",
+    "resultTitle": "Analyseergebnisse",
+    "noResults": "Noch keine Analyse durchgeführt."
+  }
+}

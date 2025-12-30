@@ -1,0 +1,13 @@
+{
+  "HomePage": {
+    "title": "ScamCheck Web",
+    "description": "Şüpheli mesajları ve URL'leri analiz ederek güvende kalın.",
+    "messagePlaceholder": "Şüpheli mesajı buraya yapıştırın...",
+    "urlPlaceholder": "Kontrol edilecek URL'yi girin...",
+    "messageLabel": "Mesaj",
+    "urlLabel": "URL",
+    "analyzeButton": "Analiz Et",
+    "resultTitle": "Analiz Sonuçları",
+    "noResults": "Henüz analiz yapılmadı."
+  }
+}
