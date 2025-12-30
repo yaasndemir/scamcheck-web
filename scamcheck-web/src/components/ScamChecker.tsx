@@ -154,6 +154,7 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
           <div className="absolute bottom-4 right-4 flex space-x-2">
             <button
               onClick={handleDemo}
+              data-testid="demo-button"
               className="px-3 py-1 text-sm text-gray-500 hover:text-blue-600 font-medium transition-colors bg-white rounded-md shadow-sm border border-gray-200"
             >
               {t('inputSection.demoButton')}
@@ -206,6 +207,7 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
 
         <button
           onClick={handleAnalyze}
+          data-testid="analyze-button"
           disabled={isAnalyzing || (!text && !url)}
           className="w-full mt-6 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-lg font-semibold py-4 rounded-xl shadow-lg hover:shadow-xl transition-all active:scale-[0.98] flex items-center justify-center space-x-2"
         >
@@ -228,6 +230,7 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
         {result && !isAnalyzing && (
           <motion.div
             key="results"
+            data-testid="results-section"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
@@ -239,6 +242,7 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
+                  data-testid={tab === 'safeReply' ? 'safe-reply-tab' : undefined}
                   className={cn(
                     "px-6 py-2 rounded-lg text-sm font-medium transition-all",
                     activeTab === tab
@@ -354,6 +358,7 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
                       <button
                         key={cat}
                         onClick={() => setSelectedCategory(cat as ReplyCategory)}
+                        data-testid={cat === 'bank' ? 'safe-reply-category-bank' : undefined}
                         className={cn(
                           "px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors",
                           selectedCategory === cat
