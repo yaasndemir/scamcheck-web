@@ -1,0 +1,266 @@
+{
+  "textRules": [
+    {
+      "id": "urgency",
+      "severity": 20,
+      "tags": ["urgency", "social_engineering"],
+      "patterns": {
+        "en": ["immediately", "urgent", "act now", "action required", "within 24 hours", "account suspended"],
+        "tr": ["acil", "hemen", "derhal", "eylem gerekiyor", "24 saat içinde", "hesap askıya alındı"],
+        "de": ["dringend", "sofort", "handeln sie jetzt", "sofortige maßnahmen", "innerhalb von 24 stunden", "konto gesperrt"]
+      }
+    },
+    {
+      "id": "otp",
+      "severity": 30,
+      "tags": ["otp", "sensitive_info"],
+      "patterns": {
+        "en": ["verification code", "otp", "one time password", "confirmation code"],
+        "tr": ["doğrulama kodu", "tek kullanımlık şifre", "onay kodu", "şifreniz"],
+        "de": ["bestätigungscode", "einmalpasswort", "verifizierungscode"]
+      }
+    },
+    {
+      "id": "password_request",
+      "severity": 40,
+      "tags": ["credential_theft", "high_risk"],
+      "patterns": {
+        "en": ["send your password", "confirm your password", "verify your password"],
+        "tr": ["şifrenizi gönderin", "şifrenizi onaylayın", "şifrenizi doğrulayın", "parolanızı girin"],
+        "de": ["senden sie ihr passwort", "bestätigen sie ihr passwort", "passwort überprüfen"]
+      }
+    },
+    {
+      "id": "support_impersonation",
+      "severity": 25,
+      "tags": ["impersonation"],
+      "patterns": {
+        "en": ["instagram support", "facebook security", "bank support", "customer service team", "security alert"],
+        "tr": ["instagram destek", "facebook güvenlik", "banka destek", "müşteri hizmetleri", "güvenlik uyarısı"],
+        "de": ["instagram-support", "facebook-sicherheit", "bank-support", "kundendienst", "sicherheitswarnung"]
+      }
+    },
+    {
+      "id": "gift_cards",
+      "severity": 25,
+      "tags": ["payment_scam"],
+      "patterns": {
+        "en": ["google play card", "itunes card", "steam card", "amazon gift card", "pay with gift card"],
+        "tr": ["google play kartı", "itunes kartı", "steam cüzdan", "amazon hediye kartı", "hediye kartı ile öde"],
+        "de": ["google play karte", "itunes karte", "steam karte", "amazon geschenkkarte", "mit geschenkkarte bezahlen"]
+      }
+    },
+    {
+      "id": "iban_request",
+      "severity": 20,
+      "tags": ["financial_info"],
+      "patterns": {
+        "en": ["send your iban", "bank account details", "wire transfer"],
+        "tr": ["iban numaranı", "banka hesap bilgileri", "havale yap"],
+        "de": ["senden sie ihre iban", "bankverbindung", "überweisung"]
+      }
+    },
+    {
+      "id": "crypto",
+      "severity": 20,
+      "tags": ["crypto_scam"],
+      "patterns": {
+        "en": ["bitcoin wallet", "usdt", "crypto investment", "wallet address"],
+        "tr": ["bitcoin cüzdanı", "usdt", "kripto yatırım", "cüzdan adresi"],
+        "de": ["bitcoin-brieftasche", "krypto-investition", "brieftaschenadresse"]
+      }
+    },
+    {
+      "id": "suspicious_link_text",
+      "severity": 15,
+      "tags": ["malicious_link"],
+      "patterns": {
+        "en": ["click the link below", "secure link", "login here"],
+        "tr": ["aşağıdaki linke tıkla", "güvenli bağlantı", "buradan giriş yap"],
+        "de": ["klicken sie auf den link", "sicherer link", "hier einloggen"]
+      }
+    },
+    {
+      "id": "prize_winner",
+      "severity": 20,
+      "tags": ["lottery_scam"],
+      "patterns": {
+        "en": ["you won", "lottery winner", "claim your prize", "congratulations"],
+        "tr": ["kazandınız", "çekiliş kazananı", "ödülünü al", "tebrikler"],
+        "de": ["du hast gewonnen", "lotteriegewinner", "preis anfordern", "herzlichen glückwunsch"]
+      }
+    },
+    {
+      "id": "family_emergency",
+      "severity": 25,
+      "tags": ["social_engineering"],
+      "patterns": {
+        "en": ["i am in hospital", "lost my phone", "need money urgently", "help me mom"],
+        "tr": ["hastanede", "telefonumu kaybettim", "acil paraya ihtiyacım var", "anne yardım et", "baba yardım et"],
+        "de": ["ich bin im krankenhaus", "handy verloren", "brauche dringend geld", "hilf mir mama"]
+      }
+    },
+    {
+      "id": "job_offer",
+      "severity": 15,
+      "tags": ["job_scam"],
+      "patterns": {
+        "en": ["work from home", "earn money easily", "part time job", "daily payment"],
+        "tr": ["evden çalış", "kolay para kazan", "yarı zamanlı iş", "günlük ödeme"],
+        "de": ["von zu hause aus arbeiten", "leicht geld verdienen", "teilzeitjob", "tägliche zahlung"]
+      }
+    },
+    {
+      "id": "unauthorized_login",
+      "severity": 20,
+      "tags": ["phishing"],
+      "patterns": {
+        "en": ["unusual login attempt", "verify your identity", "someone accessed your account"],
+        "tr": ["olağandışı giriş denemesi", "kimliğinizi doğrulayın", "hesabınıza erişildi"],
+        "de": ["ungewöhnlicher anmeldeversuch", "identität überprüfen", "jemand hat auf ihr konto zugegriffen"]
+      }
+    },
+    {
+      "id": "tax_refund",
+      "severity": 15,
+      "tags": ["phishing"],
+      "patterns": {
+        "en": ["tax refund", "tax rebate", "claim your refund"],
+        "tr": ["vergi iadesi", "vergi geri ödemesi", "iadenizi alın"],
+        "de": ["steuerrückerstattung", "steuerrückzahlung", "rückerstattung anfordern"]
+      }
+    },
+    {
+      "id": "investment",
+      "severity": 20,
+      "tags": ["investment_scam"],
+      "patterns": {
+        "en": ["guaranteed return", "multiply your money", "no risk"],
+        "tr": ["garantili getiri", "paranızı katlayın", "risksiz"],
+        "de": ["garantierte rendite", "geld vermehren", "kein risiko"]
+      }
+    },
+    {
+      "id": "romance",
+      "severity": 15,
+      "tags": ["romance_scam"],
+      "patterns": {
+        "en": ["my love", "send money for ticket", "meet you soon"],
+        "tr": ["aşkım", "bilet parası gönder", "yakında buluşacağız"],
+        "de": ["meine liebe", "geld für ticket senden", "wir sehen uns bald"]
+      }
+    },
+    {
+      "id": "invoice",
+      "severity": 15,
+      "tags": ["phishing"],
+      "patterns": {
+        "en": ["unpaid invoice", "payment overdue", "final notice"],
+        "tr": ["ödenmemiş fatura", "ödeme gecikti", "son uyarı"],
+        "de": ["unbezahlte rechnung", "zahlung überfällig", "letzte mahnung"]
+      }
+    },
+    {
+      "id": "gov_impersonation",
+      "severity": 30,
+      "tags": ["impersonation"],
+      "patterns": {
+        "en": ["police department", "fbi", "court order", "arrest warrant"],
+        "tr": ["emniyet müdürlüğü", "polis", "mahkeme kararı", "tutuklama emri", "savcılık"],
+        "de": ["polizeibehörde", "fbi", "gerichtsentscheidung", "haftbefehl"]
+      }
+    },
+    {
+      "id": "package_delivery",
+      "severity": 15,
+      "tags": ["smishing"],
+      "patterns": {
+        "en": ["package delivery failed", "address incorrect", "delivery fee"],
+        "tr": ["kargo teslim edilemedi", "adres hatalı", "teslimat ücreti", "gümrük vergisi"],
+        "de": ["paketzustellung fehlgeschlagen", "adresse falsch", "versandgebühr"]
+      }
+    },
+    {
+      "id": "generic_greeting",
+      "severity": 5,
+      "tags": ["spam_indicator"],
+      "patterns": {
+        "en": ["dear customer", "dear user", "dear member"],
+        "tr": ["sayın müşteri", "sayın kullanıcı", "değerli üyemiz"],
+        "de": ["lieber kunde", "lieber benutzer", "liebes mitglied"]
+      }
+    },
+     {
+      "id": "extortion",
+      "severity": 40,
+      "tags": ["sextortion", "high_risk"],
+      "patterns": {
+        "en": ["recorded you", "webcam footage", "pay or leak"],
+        "tr": ["seni kaydettim", "kamera görüntüleri", "öde yoksa yayarım"],
+        "de": ["habe dich aufgenommen", "webcam-aufnahmen", "zahlen oder leaken"]
+      }
+    }
+  ],
+  "urlRules": [
+    {
+      "id": "ip_address_url",
+      "severity": 80,
+      "tags": ["technical", "high_risk"],
+      "regex": "^(http|https)://\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}"
+    },
+    {
+      "id": "punycode",
+      "severity": 70,
+      "tags": ["technical", "high_risk"],
+      "regex": "xn--"
+    },
+    {
+      "id": "at_symbol",
+      "severity": 60,
+      "tags": ["technical", "obfuscation"],
+      "regex": "@"
+    },
+    {
+      "id": "multiple_subdomains",
+      "severity": 40,
+      "tags": ["technical", "suspicious_structure"],
+      "regex": "\\..+\\..+\\..+"
+    },
+    {
+      "id": "suspicious_tld",
+      "severity": 30,
+      "tags": ["technical"],
+      "regex": "\\.(xyz|top|info|club|live|ru|cn)(?:/|$)"
+    },
+    {
+      "id": "double_extension",
+      "severity": 50,
+      "tags": ["technical", "malware"],
+      "regex": "\\.(exe|zip|rar|7z|scr|bat|cmd|vbs)\\.(txt|jpg|png|pdf|doc|docx)(?:/|$)"
+    },
+    {
+      "id": "port_in_url",
+      "severity": 40,
+      "tags": ["technical"],
+      "regex": ":[0-9]{2,5}(/|$)"
+    },
+    {
+      "id": "login_keyword",
+      "severity": 20,
+      "tags": ["phishing"],
+      "regex": "login|signin|secure|account|update|verify|banking"
+    },
+    {
+      "id": "shortener",
+      "severity": 10,
+      "tags": ["obfuscation"],
+      "regex": "^(http|https)://(bit\\.ly|goo\\.gl|t\\.co|tinyurl\\.com|is\\.gd|cli\\.gs|yfrog\\.com|migre\\.me|ff\\.im|tiny\\.cc|url4\\.eu|twit\\.ac|su\\.pr|twurl\\.nl|snipurl\\.com|short\\.to|budurl\\.com|ping\\.fm|post\\.ly|just\\.as|bkite\\.com|snipr\\.com|fic\\.kr|loopt\\.us|doiop\\.com|short\\.ie|kl\\.am|wp\\.me|rubyurl\\.com|om\\.ly|to\\.ly|bit\\.do|t\\.me|lnkd\\.in|db\\.tt|qr\\.ae|adf\\.ly|goo\\.gl|bitly\\.com|cur\\.lv|tinyurl\\.com|ow\\.ly|bit\\.ly|ity\\.im|q\\.gs|is\\.gd|po\\.st|bc\\.vc|twitthis\\.com|u\\.to|j\\.mp|buzurl\\.com|cutt\\.us|u\\.bb|yourls\\.org|x\\.co|prettylinkpro\\.com|scrnch\\.me|filoops\\.info|vzturl\\.com|qr\\.net|1url\\.com|tweez\\.me|v\\.gd|tr\\.im|link\\.zip\\.net)"
+    },
+    {
+      "id": "mixed_script",
+      "severity": 60,
+      "tags": ["technical", "homograph"],
+      "regex": "[а-яА-Я].*[a-zA-Z]|[a-zA-Z].*[а-яА-Я]"
+    }
+  ]
+}
