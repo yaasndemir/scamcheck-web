@@ -180,8 +180,11 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
   };
 
   const handleAnalyze = async () => {
-    // Whitespace guard
-    if ((!text || !text.trim()) && (!url || !url.trim())) {
+    // Whitespace guard - Ensure no empty input is processed
+    const isTextEmpty = !text || !text.trim();
+    const isUrlEmpty = !url || !url.trim();
+
+    if (isTextEmpty && isUrlEmpty) {
         setError(t('inputSection.errorEmpty') || "Please enter text or a URL.");
         return;
     }
@@ -409,12 +412,12 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
                                             item.severity === 'medium' ? "text-amber-400 border-amber-900 bg-amber-900/20" :
                                             "text-green-400 border-green-900 bg-green-900/20"
                                         )}>Score: {item.score}</Badge>
-                                        <span className="text-[10px] text-slate-500">{new Date(item.timestamp).toLocaleTimeString()}</span>
+                                        <span className="text-[10px] text-slate-400">{new Date(item.timestamp).toLocaleTimeString()}</span>
                                     </div>
                                     {item.domain && <div className="text-xs text-slate-300 truncate font-mono mb-1">{item.domain}</div>}
                                     <div className="flex gap-1 overflow-hidden">
                                         {item.tags.slice(0, 2).map(tag => (
-                                            <span key={tag} className="text-[9px] text-slate-500 bg-slate-800 px-1 rounded">{tag}</span>
+                                            <span key={tag} className="text-[9px] text-slate-400 bg-slate-800 px-1 rounded">{tag}</span>
                                         ))}
                                     </div>
                                 </div>

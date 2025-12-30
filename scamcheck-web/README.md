@@ -13,6 +13,9 @@ Built with **Next.js (App Router)**, **TypeScript**, **Tailwind CSS**, and **Pla
 -   **Safe Reply:** Pre-written, safe templates for replying to potential scammers without revealing personal info.
 -   **Multi-language:** Full support for English (EN), Turkish (TR), and German (DE).
 -   **Premium UI:** Accessible, high-contrast design with dark/light mode support.
+-   **OCR Support:** Extract text from screenshots using client-side OCR (Tesseract.js).
+-   **Advanced Detection:** Simulated database checks for URL shorteners, domain age, and reputation (blocklist/allowlist).
+-   **Educational:** Tooltips explaining why a message was flagged.
 -   **PWA Ready:** Manifest and icons included (basic configuration).
 
 ## Tech Stack
@@ -51,28 +54,37 @@ Built with **Next.js (App Router)**, **TypeScript**, **Tailwind CSS**, and **Pla
 
     Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-## Testing
+## Verification & Testing
 
-We use Playwright for End-to-End (E2E) testing.
+We use **Playwright** for End-to-End (E2E) testing to ensure critical flows work (especially auto-detection and safe reply).
 
-1.  Install browsers:
+1.  **Validate JSON files (Pre-build check):**
+    ```bash
+    npm run validate-json
+    ```
+    This script checks for syntax errors in locale files. It runs automatically before build.
+
+2.  **Install test browsers:**
     ```bash
     npx playwright install --with-deps
     ```
 
-2.  Run tests:
+3.  **Run E2E tests:**
     ```bash
     npm run test:e2e
     ```
 
-    To view the report:
+    To view the HTML report:
     ```bash
     npx playwright show-report
     ```
 
-## Extending Rules
+## Extending Logic
 
-Scam detection rules are defined in `src/data/rules.json`. You can add new patterns or rules without changing the code.
+### Rules (`src/data/rules.json`)
+You can add new detection patterns here.
+
+**Example Rule Structure:**
 
 **Example Rule Structure:**
 
@@ -88,6 +100,30 @@ Scam detection rules are defined in `src/data/rules.json`. You can add new patte
   }
 }
 ```
+
+### Safe Replies (`src/data/replies.json`)
+Add new safe reply templates categorized by type (Bank, Delivery, etc.) and locale.
+
+```json
+"templates": {
+  "bank": {
+    "en": ["I will call the bank directly."],
+    "tr": ["Bankayı doğrudan arayacağım."]
+  }
+}
+```
+
+### Explanations (`src/data/explanations.json`)
+Add educational tooltips for specific rule IDs.
+
+### Simulated Data
+- **Unshortener:** `src/data/unshortenMap.json` maps short URLs to real ones (mock).
+- **Domain Age:** `src/data/domainAgeMock.json` mocks domain ages (days).
+
+## OCR Feature
+The application uses **Tesseract.js** for client-side Optical Character Recognition.
+- **Limitations:** Processing large images happens in the browser and may be slow on older devices.
+- **Privacy:** Images are processed locally and never uploaded.
 
 ## Deployment on Vercel
 

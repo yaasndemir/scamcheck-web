@@ -4,6 +4,11 @@
     "tr": "Dolandırıcılar düşünmeden hareket etmeniz için aciliyet hissi yaratır. Gerçek kurumlar nadiren anlık işlem talep eder.",
     "de": "Betrüger nutzen Dringlichkeit, damit Sie unüberlegt handeln. Echte Organisationen verlangen selten sofortiges Handeln."
   },
+  "urgency": {
+    "en": "Scammers use urgency to make you act without thinking. Real organizations rarely demand immediate action.",
+    "tr": "Dolandırıcılar düşünmeden hareket etmeniz için aciliyet hissi yaratır. Gerçek kurumlar nadiren anlık işlem talep eder.",
+    "de": "Betrüger nutzen Dringlichkeit, damit Sie unüberlegt handeln. Echte Organisationen verlangen selten sofortiges Handeln."
+  },
   "financial_request": {
     "en": "Requests for money or financial info are high-risk. Verify via official channels.",
     "tr": "Para veya finansal bilgi talepleri yüksek risklidir. Resmi kanallardan doğrulayın.",
@@ -33,5 +38,165 @@
     "en": "Legitimate services use domain names, not IP addresses.",
     "tr": "Meşru servisler IP adresi değil, alan adı kullanır.",
     "de": "Legitime Dienste verwenden Domainnamen, keine IP-Adressen."
+  },
+  "ip_address_url": {
+    "en": "Legitimate services use domain names, not IP addresses.",
+    "tr": "Meşru servisler IP adresi değil, alan adı kullanır.",
+    "de": "Legitime Dienste verwenden Domainnamen, keine IP-Adressen."
+  },
+  "otp": {
+    "en": "Never share your One-Time Password (OTP). Banks/support never ask for it.",
+    "tr": "Tek Kullanımlık Şifrenizi (OTP) asla paylaşmayın. Bankalar/destek bunu asla istemez.",
+    "de": "Geben Sie niemals Ihr Einmalpasswort (OTP) weiter. Banken/Support fragen nie danach."
+  },
+  "password_request": {
+    "en": "Legitimate services never ask for your password via message.",
+    "tr": "Meşru servisler asla mesaj yoluyla şifrenizi istemez.",
+    "de": "Legitime Dienste fragen niemals per Nachricht nach Ihrem Passwort."
+  },
+  "support_impersonation": {
+    "en": "Scammers often pretend to be support staff. Contact the company directly.",
+    "tr": "Dolandırıcılar sıkça destek personeli taklidi yapar. Şirketle doğrudan iletişime geçin.",
+    "de": "Betrüger geben sich oft als Support-Mitarbeiter aus. Kontaktieren Sie das Unternehmen direkt."
+  },
+  "gift_cards": {
+    "en": "Demanding payment via gift cards is a huge red flag. It's untraceable.",
+    "tr": "Hediye kartı ile ödeme istemek büyük bir tehlike işaretidir. Takibi yapılamaz.",
+    "de": "Zahlungen per Geschenkkarte zu verlangen ist ein riesiges Warnsignal. Es ist nicht rückverfolgbar."
+  },
+  "iban_request": {
+    "en": "Be cautious when asked to send bank details via insecure messages.",
+    "tr": "Güvensiz mesajlar üzerinden banka bilgileri istendiğinde dikkatli olun.",
+    "de": "Seien Sie vorsichtig, wenn Sie per unsicherer Nachricht nach Bankdaten gefragt werden."
+  },
+  "crypto": {
+    "en": "Crypto transactions are irreversible. Scammers love using them.",
+    "tr": "Kripto işlemleri geri alınamaz. Dolandırıcılar bunu kullanmayı sever.",
+    "de": "Kryptotransaktionen sind irreversibel. Betrüger nutzen sie gerne."
+  },
+  "suspicious_link_text": {
+    "en": "Generic or pushy link texts often lead to phishing sites.",
+    "tr": "Jenerik veya zorlayıcı link metinleri genellikle oltalama sitelerine yönlendirir.",
+    "de": "Generische oder aufdringliche Linktexte führen oft zu Phishing-Seiten."
+  },
+  "prize_winner": {
+    "en": "You didn't win a lottery you didn't enter. This is a fee scam.",
+    "tr": "Katılmadığınız bir çekilişi kazanamazsınız. Bu bir ücret dolandırıcılığıdır.",
+    "de": "Sie haben keine Lotterie gewonnen, an der Sie nicht teilgenommen haben."
+  },
+  "family_emergency": {
+    "en": "Scammers pretend to be family in trouble. Call them on their known number.",
+    "tr": "Dolandırıcılar zorda kalmış aile bireyi taklidi yapar. Onları bildiğiniz numaradan arayın.",
+    "de": "Betrüger geben sich als Familienangehörige in Not aus. Rufen Sie sie unter ihrer bekannten Nummer an."
+  },
+  "job_offer": {
+    "en": "Easy high-paying jobs are often scams to steal data or money.",
+    "tr": "Kolay ve yüksek maaşlı işler genellikle veri veya para çalma amaçlı dolandırıcılıktır.",
+    "de": "Leichte, gut bezahlte Jobs sind oft Betrug, um Daten oder Geld zu stehlen."
+  },
+  "unauthorized_login": {
+    "en": "Phishing attempts often claim unauthorized access to scare you.",
+    "tr": "Oltalama girişimleri sizi korkutmak için yetkisiz erişim olduğunu iddia eder.",
+    "de": "Phishing-Versuche behaupten oft unbefugten Zugriff, um Sie zu erschrecken."
+  },
+  "tax_refund": {
+    "en": "Government agencies do not send tax refunds via text links.",
+    "tr": "Devlet kurumları vergi iadelerini mesaj linkiyle göndermez.",
+    "de": "Behörden versenden keine Steuerrückerstattungen per Textlink."
+  },
+  "investment": {
+    "en": "Guaranteed high returns are mathematically impossible and likely a Ponzi scheme.",
+    "tr": "Garantili yüksek getiriler matematiksel olarak imkansızdır ve muhtemelen saadet zinciridir.",
+    "de": "Garantierte hohe Renditen sind mathematisch unmöglich und wahrscheinlich ein Schneeballsystem."
+  },
+  "romance": {
+    "en": "Romance scammers build trust to eventually ask for money.",
+    "tr": "Romantik dolandırıcılar güven inşa edip sonunda para isterler.",
+    "de": "Liebesbetrüger bauen Vertrauen auf, um schließlich nach Geld zu fragen."
+  },
+  "invoice": {
+    "en": "Fake invoices for services you didn't buy are common.",
+    "tr": "Satın almadığınız hizmetler için sahte faturalar yaygındır.",
+    "de": "Gefälschte Rechnungen für Dienstleistungen, die Sie nicht gekauft haben, sind üblich."
+  },
+  "gov_impersonation": {
+    "en": "Police or courts do not text you warrants. This is intimidation.",
+    "tr": "Polis veya mahkemeler size mesajla tutuklama emri göndermez. Bu bir korkutmadır.",
+    "de": "Polizei oder Gerichte senden Ihnen keine Haftbefehle per SMS."
+  },
+  "package_delivery": {
+    "en": "Fake delivery fees are a common way to steal credit card info.",
+    "tr": "Sahte teslimat ücretleri kredi kartı bilgisi çalmak için yaygın bir yoldur.",
+    "de": "Gefälschte Liefergebühren sind ein häufiger Weg, um Kreditkartendaten zu stehlen."
+  },
+  "generic_greeting": {
+    "en": "Generic greetings like 'Dear Customer' are typical in mass phishing campaigns.",
+    "tr": "'Sayın Müşteri' gibi genel selamlamalar toplu oltalama kampanyalarında tipiktir.",
+    "de": "Allgemeine Begrüßungen wie 'Lieber Kunde' sind typisch für Massen-Phishing-Kampagnen."
+  },
+  "extortion": {
+    "en": "Threats to release embarrassing content are usually fake (sextortion).",
+    "tr": "Utanç verici içerik yayma tehditleri genellikle sahtedir (şantaj).",
+    "de": "Drohungen, peinliche Inhalte zu veröffentlichen, sind meist gefälscht (Sextortion)."
+  },
+  "at_symbol": {
+    "en": "Using @ in a URL often tricks browsers into ignoring the first part.",
+    "tr": "URL'de @ kullanımı genellikle tarayıcıları ilk kısmı görmezden gelmeye iter.",
+    "de": "Die Verwendung von @ in einer URL täuscht Browser oft, den ersten Teil zu ignorieren."
+  },
+  "url_has_at_symbol": {
+    "en": "Using @ in a URL often tricks browsers into ignoring the first part.",
+    "tr": "URL'de @ kullanımı genellikle tarayıcıları ilk kısmı görmezden gelmeye iter.",
+    "de": "Die Verwendung von @ in einer URL täuscht Browser oft, den ersten Teil zu ignorieren."
+  },
+  "multiple_subdomains": {
+    "en": "Excessive subdomains are used to hide the real domain.",
+    "tr": "Aşırı alt alan adları gerçek alan adını gizlemek için kullanılır.",
+    "de": "Übermäßige Subdomains werden verwendet, um die echte Domain zu verbergen."
+  },
+  "suspicious_tld": {
+    "en": "Cheap or unusual domain extensions are popular with scammers.",
+    "tr": "Ucuz veya sıra dışı alan adı uzantıları dolandırıcılar arasında popülerdir.",
+    "de": "Billige oder ungewöhnliche Domainendungen sind bei Betrügern beliebt."
+  },
+  "double_extension": {
+    "en": "Files appearing to be docs but are actually executables (e.g. .pdf.exe).",
+    "tr": "Belge gibi görünen ama aslında çalıştırılabilir dosya olanlar (örn. .pdf.exe).",
+    "de": "Dateien, die wie Dokumente aussehen, aber ausführbare Dateien sind (z. B. .pdf.exe)."
+  },
+  "port_in_url": {
+    "en": "Non-standard ports in URLs can indicate a compromised server.",
+    "tr": "URL'lerde standart olmayan portlar, ele geçirilmiş bir sunucuyu işaret edebilir.",
+    "de": "Nicht-Standard-Ports in URLs können auf einen kompromittierten Server hinweisen."
+  },
+  "login_keyword": {
+    "en": "URL contains security keywords to look legitimate, but on a wrong domain.",
+    "tr": "URL, meşru görünmek için güvenlik kelimeleri içeriyor ama yanlış bir alan adında.",
+    "de": "URL enthält Sicherheits-Schlüsselwörter, um legitim zu wirken, aber auf einer falschen Domain."
+  },
+  "shortener": {
+    "en": "URL shorteners hide the final destination. Treat with caution.",
+    "tr": "URL kısaltıcılar nihai adresi gizler. Dikkatli yaklaşın.",
+    "de": "URL-Shortener verbergen das endgültige Ziel. Vorsicht ist geboten."
+  },
+  "mixed_script": {
+    "en": "Mixing alphabets (e.g. Cyrillic and Latin) confuses the eye (homograph).",
+    "tr": "Alfabeleri karıştırmak (örn. Kiril ve Latin) göz yanılması yaratır (homograf).",
+    "de": "Das Mischen von Alphabeten (z. B. Kyrillisch und Latein) verwirrt das Auge (Homograf)."
+  },
+  "trusted_domain_match": {
+    "en": "This domain is recognized as an official, trusted entity.",
+    "tr": "Bu alan adı resmi ve güvenilir bir kurum olarak tanınmaktadır.",
+    "de": "Diese Domain wird als offizielle, vertrauenswürdige Einheit anerkannt."
+  },
+  "domain_mismatch": {
+    "en": "The message claims to be from a brand, but the URL domain does not match.",
+    "tr": "Mesaj bir markadan geldiğini iddia ediyor ancak URL alan adı uyuşmuyor.",
+    "de": "Die Nachricht gibt vor, von einer Marke zu stammen, aber die URL-Domain stimmt nicht überein."
+  },
+  "input_too_long": {
+    "en": "The input was truncated for performance reasons.",
+    "tr": "Girdi performans nedenleriyle kırpıldı.",
+    "de": "Die Eingabe wurde aus Leistungsgründen gekürzt."
   }
 }
