@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "test:e2e": "playwright test",
-    "test:e2e:headed": "playwright test --headed"
+    "test:e2e:headed": "playwright test --headed",
+    "validate-json": "node scripts/validate-json.js",
+    "prebuild": "npm run validate-json"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
@@ -19,7 +21,8 @@
     "next-intl": "^4.6.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "tailwind-merge": "^3.4.0"
+    "tailwind-merge": "^3.4.0",
+    "tesseract.js": "^5.1.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.57.0",
