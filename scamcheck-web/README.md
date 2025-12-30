@@ -1,46 +1,35 @@
-# ScamCheck Web
+# scamcheck-web
+TR/EN/DE scam & phishing message checker (client-side rules engine)
 
-A web application to analyze suspicious messages and URLs, helping users identify potential scams.
+## E2E Verification
 
-## Features
+This project uses [Playwright](https://playwright.dev/) for End-to-End testing.
 
--   **Message Analysis:** Paste suspicious text to check for scam indicators.
--   **URL Analysis:** Enter URLs to verify if they are safe or malicious.
--   **Multi-language Support:** Available in Turkish (TR), English (EN), and German (DE).
+To run the tests:
 
-## Tech Stack
+```bash
+cd scamcheck-web
+npm run test:e2e
+```
 
--   **Framework:** [Next.js](https://nextjs.org/) (App Router)
--   **Language:** [TypeScript](https://www.typescriptlang.org/)
--   **Styling:** [Tailwind CSS](https://tailwindcss.com/)
--   **Internationalization:** [next-intl](https://next-intl-docs.vercel.app/)
+The tests verify the core flow:
+1.  Navigate to the Turkish locale.
+2.  Use the "Demo" feature to populate text.
+3.  Analyze the text.
+4.  Verify results and "Safe Reply" features.
+5.  Capture screenshots in `test-results/`.
 
-## Getting Started
+## Extending the Project
 
-1.  **Install dependencies:**
+### Adding Rules
+Edit `src/data/rules.json`. You can add new patterns to existing rules or create new rules with specific severity levels and tags.
 
-    ```bash
-    npm install
-    ```
+### Adding Replies
+Edit `src/data/replies.json`.
+- **Categories**: Add new category keys to the `categories` array.
+- **Templates**: Add a new object under `templates` matching the category key. Each category must have `en`, `tr`, and `de` arrays containing string templates.
 
-2.  **Run the development server:**
-
-    ```bash
-    npm run dev
-    ```
-
-3.  **Open the application:**
-
-    Open [http://localhost:3000](http://localhost:3000) with your browser.
-
-    The application will automatically redirect to the default locale (e.g., `/tr`). You can also visit specific locales:
-    -   [http://localhost:3000/tr](http://localhost:3000/tr)
-    -   [http://localhost:3000/en](http://localhost:3000/en)
-    -   [http://localhost:3000/de](http://localhost:3000/de)
-
-## Project Structure
-
--   `src/app/[locale]`: App Router pages with locale parameter.
--   `messages`: Localization JSON files.
--   `src/i18n`: Internationalization configuration.
--   `src/middleware.ts`: Middleware for locale routing.
+### Development
+1. Install dependencies: `npm install`
+2. Run dev server: `npm run dev`
+3. Build: `npm run build`

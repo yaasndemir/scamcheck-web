@@ -59,6 +59,20 @@ export function analyzeText(text: string, locale: string = 'en'): AnalysisResult
   const tags: Set<string> = new Set();
   let totalSeverity = 0;
 
+  if (!text) {
+    return { score: 0, reasons: [], tags: [] };
+  }
+
+  // Performance guard: truncate if too long
+  const MAX_LENGTH = 10000;
+  if (text.length >= MAX_LENGTH) {
+    return {
+      score: 0,
+      reasons: ["Input too long (>10,000 characters). Analysis aborted for performance."],
+      tags: ["error"]
+    };
+  }
+
   // Normalize text for case-insensitive matching
   const normalizedText = text.toLowerCase();
 

@@ -43,6 +43,7 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
   const [activeTab, setActiveTab] = useState<'results' | 'safeReply'>('results');
   const [selectedCategory, setSelectedCategory] = useState<ReplyCategory>('bank');
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const handleDemo = () => {
     // Demo text based on locale
@@ -55,9 +56,14 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
       demoText = "Urgent! Your account has been suspended. Verify immediately at: http://secure-banking-alert.com";
     }
     setText(demoText);
-    if (autoDetectUrl) {
-      setUrl(extractUrl(demoText));
+    // Logic to set URL is handled by useEffect or manually here
+    // But since we have auto-detect effect, we might not need to set it manually if effect runs.
+    // However, for immediate feedback in demo:
+    const extracted = extractUrl(demoText);
+    if (autoDetectUrl && extracted) {
+      setUrl(extracted);
     }
+    setError(null);
   };
 
   const handleAnalyze = async () => {
@@ -75,6 +81,23 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
 
     // Use the URL input if provided, otherwise extract from text if auto-detect is on
     const urlToAnalyze = url || (autoDetectUrl ? extractUrl(text) : '');
+
+    // Validate URL if present
+    const isValidUrl = (s: string) => {
+        try {
+            new URL(s);
+            return true;
+        } catch {
+            return false;
+        }
+    };
+
+    if (urlToAnalyze && !isValidUrl(urlToAnalyze)) {
+         setIsAnalyzing(false);
+         setError(t('inputSection.invalidUrl') || "Invalid URL provided."); // Assuming key might exist or fallback
+         return;
+    }
+    setError(null);
 
     if (urlToAnalyze) {
       urlResult = analyzeUrl(urlToAnalyze);
@@ -145,6 +168,7 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
       >
         <div className="relative">
           <textarea
+            data-testid="message-input"
             value={text}
             onChange={(e) => setText(e.target.value)}
             onKeyDown={handleKeyDown}
@@ -163,6 +187,12 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
         </div>
 
         <div className="mt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          {error && (
+            <div className="w-full mb-4 p-3 bg-red-50 text-red-600 rounded-lg text-sm font-medium flex items-center">
+              <AlertTriangle size={16} className="mr-2" />
+              {error}
+            </div>
+          )}
           <div className="flex items-center space-x-2">
             <button
               onClick={() => setShowUrlInput(!showUrlInput)}
@@ -195,6 +225,7 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
               className="overflow-hidden"
             >
               <input
+                data-testid="url-input"
                 type="text"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
@@ -288,7 +319,7 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
                               cy="48"
                             />
                           </svg>
-                          <span className="absolute text-2xl font-bold text-gray-800">{result.score}</span>
+                          <span data-testid="score-value" className="absolute text-2xl font-bold text-gray-800">{result.score}</span>
                        </div>
                        <div>
                          <div className="text-sm text-gray-500 uppercase tracking-wider font-semibold mb-1">{t('results.riskScore')}</div>
@@ -302,7 +333,7 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
 
                    {/* Why Flagged */}
                    {result.reasons.length > 0 && (
-                     <div className="mb-8">
+                     <div className="mb-8" data-testid="reasons-list">
                        <h3 className="text-lg font-semibold text-gray-800 mb-4">{t('results.whyFlagged')}</h3>
                        <div className="space-y-3">
                          {result.reasons.map((reason, idx) => (
@@ -322,7 +353,7 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
 
                    {/* Tags */}
                     {result.tags.length > 0 && (
-                      <div className="mb-8">
+                      <div className="mb-8" data-testid="tags-list">
                         <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">{t('results.tags')}</h3>
                         <div className="flex flex-wrap gap-2">
                           {result.tags.map((tag) => (
@@ -335,7 +366,7 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
                     )}
 
                    {/* Recommended Actions */}
-                   <div>
+                   <div data-testid="actions-checklist">
                      <h3 className="text-lg font-semibold text-gray-800 mb-4">{t('results.recommendedActions')}</h3>
                      <div className="bg-gray-50 rounded-xl p-5 border border-gray-100 space-y-3">
                        {['verify', 'noClick', 'block'].map((actionKey) => (
@@ -352,13 +383,13 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
                </div>
             ) : (
               <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden p-6">
-                <div className="mb-6 overflow-x-auto pb-2">
+                <div className="mb-6 overflow-x-auto pb-2" data-testid="reply-category-select">
                   <div className="flex space-x-2">
                     {repliesData.categories.map((cat) => (
                       <button
                         key={cat}
                         onClick={() => setSelectedCategory(cat as ReplyCategory)}
-                        data-testid={cat === 'bank' ? 'safe-reply-category-bank' : undefined}
+                        data-testid={`reply-category-${cat}`}
                         className={cn(
                           "px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors",
                           selectedCategory === cat
@@ -376,6 +407,7 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
                   {(repliesData.templates[selectedCategory] as any)[locale]?.map((reply: string, idx: number) => (
                     <motion.div
                       key={idx}
+                      data-testid={`reply-template-${idx}`}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       className="bg-gray-50 p-4 rounded-xl border border-gray-200 hover:border-blue-300 transition-colors group relative"
@@ -383,6 +415,7 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
                        <p className="text-gray-700 pr-10 leading-relaxed">{reply}</p>
                        <button
                          onClick={() => copyToClipboard(reply, idx)}
+                         data-testid={`copy-reply-${idx}`}
                          className="absolute top-4 right-4 text-gray-400 hover:text-blue-600 transition-colors p-2 rounded-lg hover:bg-blue-50"
                          title={t('safeReply.copy')}
                        >
@@ -393,7 +426,7 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
                 </div>
 
                 {copiedIndex !== null && (
-                   <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-6 py-3 rounded-full shadow-2xl flex items-center space-x-2 z-50">
+                   <div data-testid="toast" className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-6 py-3 rounded-full shadow-2xl flex items-center space-x-2 z-50">
                      <Check size={16} />
                      <span className="text-sm font-medium">{t('safeReply.copied')}</span>
                    </div>
