@@ -8,10 +8,13 @@
       "analyzeButton": "Analyze",
       "analyzing": "Analyzing...",
       "autoDetectUrl": "Auto-detect URL from message",
-      "demoButton": "Demo"
+      "demoButton": "Demo",
+      "invalidUrl": "Invalid URL provided.",
+      "demoLoaded": "Demo loaded successfully"
     },
     "results": {
       "riskScore": "Risk Score",
+      "scoreTooltip": "Calculated based on keywords, patterns, and URL analysis.",
       "severity": {
         "low": "Low Risk",
         "medium": "Medium Risk",
@@ -20,6 +23,8 @@
       "whyFlagged": "Why flagged?",
       "tags": "Tags",
       "recommendedActions": "Recommended Actions",
+      "share": "Share Report",
+      "shareCopied": "Report summary copied to clipboard!",
       "actions": {
         "block": "Block the sender immediately.",
         "delete": "Delete the message and do not reply.",
@@ -43,6 +48,47 @@
       },
       "copy": "Copy",
       "copied": "Copied to clipboard!"
+    },
+    "privacy": {
+        "note": "Analysis happens on your device. No data is sent to servers.",
+        "short": "Client-side privacy secured"
+    },
+    "history": {
+        "title": "Recent Checks",
+        "clear": "Clear",
+        "empty": "No recent checks"
+    },
+    "rules": {
+        "urgency": "Urgency Detected",
+        "otp": "OTP Request",
+        "password_request": "Password Request",
+        "support_impersonation": "Support Impersonation",
+        "gift_cards": "Gift Card Request",
+        "iban_request": "IBAN Request",
+        "crypto": "Crypto Related",
+        "suspicious_link_text": "Suspicious Link Text",
+        "prize_winner": "Prize/Lottery Scam",
+        "family_emergency": "Family Emergency",
+        "job_offer": "Job Offer Scam",
+        "unauthorized_login": "Unauthorized Login Alert",
+        "tax_refund": "Tax Refund Scam",
+        "investment": "Investment Scam",
+        "romance": "Romance Scam",
+        "invoice": "Fake Invoice",
+        "gov_impersonation": "Government Impersonation",
+        "package_delivery": "Package Delivery Scam",
+        "generic_greeting": "Generic Greeting",
+        "extortion": "Extortion / Sextortion",
+        "ip_address_url": "IP Address URL",
+        "punycode": "Punycode (Obfuscation)",
+        "at_symbol": "@ Symbol in URL",
+        "multiple_subdomains": "Multiple Subdomains",
+        "suspicious_tld": "Suspicious Top Level Domain",
+        "double_extension": "Double File Extension",
+        "port_in_url": "Non-standard Port",
+        "login_keyword": "Login Keyword in URL",
+        "shortener": "URL Shortener",
+        "mixed_script": "Mixed Script (Homograph Attack)"
     }
   }
 }

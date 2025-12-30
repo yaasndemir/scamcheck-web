@@ -4,14 +4,17 @@
     "description": "Nachrichten sofort analysieren. Bedrohungen sicher erkennen.",
     "inputSection": {
       "placeholder": "Fügen Sie die verdächtige Nachricht hier ein...",
-      "urlPlaceholder": "Optionale URL (z.B. http://verdaechtiger-link.com)",
+      "urlPlaceholder": "Optionale URL (z. B. http://verdaechtiger-link.com)",
       "analyzeButton": "Analysieren",
-      "analyzing": "Analysieren...",
-      "autoDetectUrl": "URL aus Nachricht automatisch erkennen",
-      "demoButton": "Demo"
+      "analyzing": "Analysiere...",
+      "autoDetectUrl": "URL automatisch erkennen",
+      "demoButton": "Demo",
+      "invalidUrl": "Ungültige URL.",
+      "demoLoaded": "Demo erfolgreich geladen"
     },
     "results": {
-      "riskScore": "Risiko-Score",
+      "riskScore": "Risikowert",
+      "scoreTooltip": "Berechnet basierend auf Schlüsselwörtern, Mustern und URL-Analyse.",
       "severity": {
         "low": "Geringes Risiko",
         "medium": "Mittleres Risiko",
@@ -20,6 +23,8 @@
       "whyFlagged": "Warum markiert?",
       "tags": "Tags",
       "recommendedActions": "Empfohlene Maßnahmen",
+      "share": "Bericht teilen",
+      "shareCopied": "Berichtszusammenfassung kopiert!",
       "actions": {
         "block": "Absender sofort blockieren.",
         "delete": "Nachricht löschen und nicht antworten.",
@@ -43,6 +48,47 @@
       },
       "copy": "Kopieren",
       "copied": "In die Zwischenablage kopiert!"
+    },
+    "privacy": {
+        "note": "Die Analyse erfolgt auf Ihrem Gerät. Keine Daten werden an Server gesendet.",
+        "short": "Client-seitiger Datenschutz"
+    },
+    "history": {
+        "title": "Letzte Prüfungen",
+        "clear": "Löschen",
+        "empty": "Keine aktuellen Prüfungen"
+    },
+    "rules": {
+        "urgency": "Dringlichkeit erkannt",
+        "otp": "OTP-Anfrage",
+        "password_request": "Passwortanfrage",
+        "support_impersonation": "Support-Imitation",
+        "gift_cards": "Geschenkkartenanfrage",
+        "iban_request": "IBAN-Anfrage",
+        "crypto": "Krypto-bezogen",
+        "suspicious_link_text": "Verdächtiger Linktext",
+        "prize_winner": "Preis-/Lotteriebetrug",
+        "family_emergency": "Familiennotfall",
+        "job_offer": "Stellenangebot-Betrug",
+        "unauthorized_login": "Warnung vor unbefugtem Zugriff",
+        "tax_refund": "Steuerrückerstattungsbetrug",
+        "investment": "Anlagebetrug",
+        "romance": "Liebesbetrug",
+        "invoice": "Gefälschte Rechnung",
+        "gov_impersonation": "Behördenimitation",
+        "package_delivery": "Paketzustellungsbetrug",
+        "generic_greeting": "Allgemeine Begrüßung",
+        "extortion": "Erpressung / Sextortion",
+        "ip_address_url": "IP-Adressen-URL",
+        "punycode": "Punycode (Verschleierung)",
+        "at_symbol": "@-Symbol in URL",
+        "multiple_subdomains": "Mehrere Subdomains",
+        "suspicious_tld": "Verdächtige Top-Level-Domain",
+        "double_extension": "Doppelte Dateierweiterung",
+        "port_in_url": "Nicht-Standard-Port",
+        "login_keyword": "Login-Schlüsselwort in URL",
+        "shortener": "URL-Shortener",
+        "mixed_script": "Gemischtes Skript (Homograph-Angriff)"
     }
   }
 }
