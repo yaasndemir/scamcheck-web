@@ -10,7 +10,12 @@
       "autoDetectUrl": "URL'yi mesajdan otomatik algıla",
       "demoButton": "Demo",
       "invalidUrl": "Geçersiz URL girildi.",
-      "demoLoaded": "Demo yüklendi"
+      "demoLoaded": "Demo yüklendi",
+      "errorEmpty": "Lütfen metin veya URL girin.",
+      "ocrTooBig": "Görsel çok büyük (maks 5MB)",
+      "ocrInvalidType": "Geçersiz görsel formatı",
+      "ocrSuccess": "Görselden metin çıkarıldı",
+      "ocrError": "Metin çıkarılamadı"
     },
     "results": {
       "riskScore": "Risk Skoru",
@@ -56,7 +61,8 @@
     "history": {
         "title": "Son Analizler",
         "clear": "Temizle",
-        "empty": "Henüz analiz yok"
+        "empty": "Henüz analiz yok",
+        "restoreNote": "Gizlilik: Sadece özet veriler saklanır, içerik geri yüklenemez."
     },
     "rules": {
         "urgency": "Aciliyet Tespiti",
@@ -88,7 +94,13 @@
         "port_in_url": "Standart Olmayan Port",
         "login_keyword": "URL'de Giriş Kelimesi",
         "shortener": "URL Kısaltıcı",
-        "mixed_script": "Karışık Karakter (Homograf Saldırısı)"
+        "mixed_script": "Karışık Karakter (Homograf Saldırısı)",
+        "blacklist_match": "Kara Listede Domain",
+        "new_domain": "Yeni Domain (<30 gün)",
+        "trusted_domain_match": "Güvenilir Domain",
+        "domain_mismatch": "URL ve metin uyuşmazlığı",
+        "url_has_at_symbol": "URL'de @ var",
+        "input_too_long": "Girdi çok uzun (kırpıldı)"
     }
   }
 }
