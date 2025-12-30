@@ -1,13 +1,48 @@
 {
   "HomePage": {
-    "title": "ScamCheck Web",
-    "description": "Şüpheli mesajları ve URL'leri analiz ederek güvende kalın.",
-    "messagePlaceholder": "Şüpheli mesajı buraya yapıştırın...",
-    "urlPlaceholder": "Kontrol edilecek URL'yi girin...",
-    "messageLabel": "Mesaj",
-    "urlLabel": "URL",
-    "analyzeButton": "Analiz Et",
-    "resultTitle": "Analiz Sonuçları",
-    "noResults": "Henüz analiz yapılmadı."
+    "title": "ScamCheck",
+    "description": "Mesajları anında analiz et. Tehditleri güvenle tespit et.",
+    "inputSection": {
+      "placeholder": "Şüpheli mesajı buraya yapıştır...",
+      "urlPlaceholder": "İsteğe bağlı URL (örn. http://supheli-link.com)",
+      "analyzeButton": "Analiz Et",
+      "analyzing": "Analiz ediliyor...",
+      "autoDetectUrl": "Mesajdaki URL'yi otomatik algıla",
+      "demoButton": "Demo"
+    },
+    "results": {
+      "riskScore": "Risk Skoru",
+      "severity": {
+        "low": "Düşük Risk",
+        "medium": "Orta Risk",
+        "high": "Yüksek Risk"
+      },
+      "whyFlagged": "Neden işaretlendi?",
+      "tags": "Etiketler",
+      "recommendedActions": "Önerilen İşlemler",
+      "actions": {
+        "block": "Göndereni derhal engelle.",
+        "delete": "Mesajı sil ve cevap verme.",
+        "report": "Spam/gereksiz olarak bildir.",
+        "noClick": "Hiçbir linke tıklama.",
+        "verify": "Resmi kanallardan doğrula."
+      }
+    },
+    "safeReply": {
+      "tabs": {
+        "results": "Sonuçlar",
+        "safeReply": "Güvenli Cevap"
+      },
+      "categories": {
+        "bank": "Banka",
+        "delivery": "Kargo",
+        "job": "İş",
+        "support": "Destek",
+        "romance": "Romantik",
+        "investment": "Yatırım"
+      },
+      "copy": "Kopyala",
+      "copied": "Pano'ya kopyalandı!"
+    }
   }
 }

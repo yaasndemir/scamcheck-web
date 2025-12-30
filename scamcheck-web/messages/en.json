@@ -1,13 +1,48 @@
 {
   "HomePage": {
-    "title": "ScamCheck Web",
-    "description": "Analyze suspicious messages and URLs to stay safe.",
-    "messagePlaceholder": "Paste the suspicious message here...",
-    "urlPlaceholder": "Enter the URL to check...",
-    "messageLabel": "Message",
-    "urlLabel": "URL",
-    "analyzeButton": "Analyze",
-    "resultTitle": "Analysis Results",
-    "noResults": "No analysis performed yet."
+    "title": "ScamCheck",
+    "description": "Analyze messages instantly. Detect threats securely.",
+    "inputSection": {
+      "placeholder": "Paste the suspicious message here...",
+      "urlPlaceholder": "Optional URL (e.g., http://suspicious-link.com)",
+      "analyzeButton": "Analyze",
+      "analyzing": "Analyzing...",
+      "autoDetectUrl": "Auto-detect URL from message",
+      "demoButton": "Demo"
+    },
+    "results": {
+      "riskScore": "Risk Score",
+      "severity": {
+        "low": "Low Risk",
+        "medium": "Medium Risk",
+        "high": "High Risk"
+      },
+      "whyFlagged": "Why flagged?",
+      "tags": "Tags",
+      "recommendedActions": "Recommended Actions",
+      "actions": {
+        "block": "Block the sender immediately.",
+        "delete": "Delete the message and do not reply.",
+        "report": "Report as spam/junk.",
+        "noClick": "Do not click any links.",
+        "verify": "Verify via official channels."
+      }
+    },
+    "safeReply": {
+      "tabs": {
+        "results": "Results",
+        "safeReply": "Safe Reply"
+      },
+      "categories": {
+        "bank": "Bank",
+        "delivery": "Delivery",
+        "job": "Job",
+        "support": "Support",
+        "romance": "Romance",
+        "investment": "Investment"
+      },
+      "copy": "Copy",
+      "copied": "Copied to clipboard!"
+    }
   }
 }

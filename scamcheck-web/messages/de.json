@@ -1,13 +1,48 @@
 {
   "HomePage": {
-    "title": "ScamCheck Web",
-    "description": "Analysieren Sie verdächtige Nachrichten und URLs, um sicher zu bleiben.",
-    "messagePlaceholder": "Fügen Sie die verdächtige Nachricht hier ein...",
-    "urlPlaceholder": "Geben Sie die URL ein...",
-    "messageLabel": "Nachricht",
-    "urlLabel": "URL",
-    "analyzeButton": "Analysieren",
-    "resultTitle": "Analyseergebnisse",
-    "noResults": "Noch keine Analyse durchgeführt."
+    "title": "ScamCheck",
+    "description": "Nachrichten sofort analysieren. Bedrohungen sicher erkennen.",
+    "inputSection": {
+      "placeholder": "Fügen Sie die verdächtige Nachricht hier ein...",
+      "urlPlaceholder": "Optionale URL (z.B. http://verdaechtiger-link.com)",
+      "analyzeButton": "Analysieren",
+      "analyzing": "Analysieren...",
+      "autoDetectUrl": "URL aus Nachricht automatisch erkennen",
+      "demoButton": "Demo"
+    },
+    "results": {
+      "riskScore": "Risiko-Score",
+      "severity": {
+        "low": "Geringes Risiko",
+        "medium": "Mittleres Risiko",
+        "high": "Hohes Risiko"
+      },
+      "whyFlagged": "Warum markiert?",
+      "tags": "Tags",
+      "recommendedActions": "Empfohlene Maßnahmen",
+      "actions": {
+        "block": "Absender sofort blockieren.",
+        "delete": "Nachricht löschen und nicht antworten.",
+        "report": "Als Spam melden.",
+        "noClick": "Keine Links anklicken.",
+        "verify": "Über offizielle Kanäle überprüfen."
+      }
+    },
+    "safeReply": {
+      "tabs": {
+        "results": "Ergebnisse",
+        "safeReply": "Sichere Antwort"
+      },
+      "categories": {
+        "bank": "Bank",
+        "delivery": "Lieferung",
+        "job": "Job",
+        "support": "Support",
+        "romance": "Romantik",
+        "investment": "Investition"
+      },
+      "copy": "Kopieren",
+      "copied": "In die Zwischenablage kopiert!"
+    }
   }
 }
