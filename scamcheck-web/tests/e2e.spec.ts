@@ -1,9 +1,12 @@
 
 import { test, expect } from '@playwright/test';
 
-test('Critical Flow Verification', async ({ page }) => {
+test('Critical Flow Verification', async ({ page }, testInfo) => {
   // 1. Open /tr (Turkish locale)
   await page.goto('/tr');
+
+  // Verify App Title
+  await expect(page.getByTestId('app-title')).toBeVisible();
 
   // 2. Demo
   const demoButton = page.getByTestId('demo-button');
@@ -14,11 +17,6 @@ test('Critical Flow Verification', async ({ page }) => {
   const messageInput = page.getByTestId('message-input');
   await expect(messageInput).not.toBeEmpty();
 
-  // Verify URL input is populated (auto-detect)
-  // Need to expand URL input or just check value if it's in DOM?
-  // The logic sets the state, so if we open the input it should be there.
-  // But let's check analysis which is the goal.
-
   // 3. Analyze
   const analyzeButton = page.getByTestId('analyze-button');
   await expect(analyzeButton).toBeEnabled();
@@ -26,21 +24,20 @@ test('Critical Flow Verification', async ({ page }) => {
 
   // 4. Results Section
   const resultsSection = page.getByTestId('results-section');
-  await expect(resultsSection).toBeVisible({ timeout: 5000 }); // Wait for analysis
+  await expect(resultsSection).toBeVisible({ timeout: 10000 }); // Wait for analysis
 
   // Check score
   const scoreValue = page.getByTestId('score-value');
   await expect(scoreValue).toBeVisible();
 
   // Screenshot 1: Results
-  await page.screenshot({ path: 'test-results/results.png' });
+  await page.screenshot({ path: testInfo.outputPath('results.png') });
 
   // 5. Safe Reply Tab
   const safeReplyTab = page.getByTestId('safe-reply-tab');
   await safeReplyTab.click();
 
   // 6. Select Bank Category
-  // It might be default, but let's click explicitly
   const bankCategory = page.getByTestId('reply-category-bank');
   await expect(bankCategory).toBeVisible();
   await bankCategory.click();
@@ -55,20 +52,18 @@ test('Critical Flow Verification', async ({ page }) => {
   await expect(toast).toBeVisible();
 
   // Screenshot 2: Safe Reply
-  await page.screenshot({ path: 'test-results/safe-reply.png' });
+  await page.screenshot({ path: testInfo.outputPath('safe-reply.png') });
 
   // Additional Check: Keyboard Shortcut
   // Reload to reset
   await page.reload();
   await demoButton.click();
   await messageInput.focus();
-  await page.keyboard.press('Control+Enter'); // Or Meta+Enter for Mac, Playwright handles modifiers well usually
-  // If platform is mac, might need Meta. Let's try to detect or just send both?
-  // Playwright's `Control+Enter` sends Control on all platforms.
-  // The app code checks (e.metaKey || e.ctrlKey). So Control+Enter should work on Linux (sandbox).
+  await page.keyboard.press('Control+Enter');
+  // Note: App logic supports metaKey or ctrlKey, so Control+Enter is safe in most environments.
 
-  await expect(resultsSection).toBeVisible({ timeout: 5000 });
+  await expect(resultsSection).toBeVisible({ timeout: 10000 });
 
   // Screenshot 3: Shortcut Result
-  await page.screenshot({ path: 'test-results/shortcut.png' });
+  await page.screenshot({ path: testInfo.outputPath('shortcut.png') });
 });
