@@ -1,13 +1,10 @@
 {
   "google.com": 9000,
-  "apple.com": 9000,
+  "facebook.com": 7000,
+  "apple.com": 10000,
+  "microsoft.com": 12000,
   "amazon.com": 8000,
-  "paypal.com": 8000,
-  "banka-guvenlik-tr.com.tr.tc": 2,
-  "secure-bank-de.xyz": 5,
-  "secure-banking-alert.com": 1,
-  "new-domain-test.com": 10,
-  "medium-domain-test.com": 60,
-  "old-domain-test.com": 365,
-  "bit.ly": 4000
+  "phishing-site.com": 5,
+  "paypal-verify-secure.net": 2,
+  "secure-bank-tr.xyz": 1
 }

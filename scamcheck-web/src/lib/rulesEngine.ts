@@ -1,6 +1,6 @@
 import rulesData from '@/data/rules.json';
 import { allowlist, blocklist } from '@/data/reputation';
-import { getDomain, getDomainAgeMock, resolveShortUrlMock, isPunycode } from './urlUtils';
+import { getDomain, getDomainAgeMock, resolveShortUrlMock, isPunycode, isIpAddress } from './urlUtils';
 
 // Define types based on our JSON structure
 export interface TextRule {
@@ -135,7 +135,9 @@ export function analyzeUrl(url: string, messageText?: string): AnalysisResult {
   const isShortened = expandedUrl !== url;
   if (isShortened) {
       tags.add("url_shortener");
-      // Could add a small risk for using a shortener, but we rely on the expanded URL content
+      reasons.push("shortener");
+      // Add a small risk for using a shortener
+      totalSeverity += 10;
   }
 
   // 2. Extract domain and hostname
@@ -145,11 +147,10 @@ export function analyzeUrl(url: string, messageText?: string): AnalysisResult {
   }
 
   // 3. Whitelist Check (Reputation)
+  // Check strict equality or subdomain
   const isAllowed = allowlist.some(safe => domain === safe || domain.endsWith('.' + safe));
   if (isAllowed) {
       tags.add("trusted_domain");
-      // If whitelisted, we reduce risk significantly, but maybe not to 0 if text analysis found huge red flags.
-      // But usually whitelist means safe.
       return {
           score: 5, // Non-zero to show it was analyzed
           reasons: ["trusted_domain_match"],
@@ -175,45 +176,74 @@ export function analyzeUrl(url: string, messageText?: string): AnalysisResult {
           tags.add("newly_registered");
       } else if (ageDays < 180) {
           totalSeverity += 10;
-          // Medium age, maybe silent penalty
+          // Medium age
       }
   }
 
-  // 6. Punycode / Homograph
+  // 6. Punycode / Homograph (Basic)
   if (isPunycode(domain)) {
-      totalSeverity += 20;
+      totalSeverity += 60; // Increased from 20 to 60 as per requirements
       reasons.push("punycode");
       tags.add("homograph_risk");
   }
 
-  // 7. Regex Rules
+  // Advanced Homograph/Mixed Character detection (Regex based)
+  // Assuming "mixed_script" rule handles Cyrillic/Latin mix
+
+  // 7. IP Address + Port + Login Logic (Requirement P0.3)
+  if (isIpAddress(expandedUrl)) {
+      totalSeverity += 50; // Base penalty for IP usage
+      // Check for port
+      if (/:\d+/.test(expandedUrl)) {
+          // Check if port is not 80 or 443
+          const portMatch = expandedUrl.match(/:(\d+)/);
+          if (portMatch) {
+              const port = parseInt(portMatch[1], 10);
+              if (port !== 80 && port !== 443) {
+                  totalSeverity += 30;
+                  reasons.push("port_in_url");
+              }
+          }
+      }
+
+      // Check for sensitive paths in IP URL
+      if (/login|signin|verify|update|secure|account|bank/i.test(expandedUrl)) {
+          totalSeverity += 40;
+          reasons.push("login_keyword");
+          tags.add("phishing_ip");
+      }
+
+      reasons.push("ip_address_url");
+  }
+
+  // 8. Regex Rules
   for (const rule of compiledUrlRules) {
     try {
         if (rule.compiledRegex.test(expandedUrl)) {
-          reasons.push(rule.id);
-          rule.tags.forEach(tag => tags.add(tag));
-          totalSeverity += rule.severity;
+          // Avoid duplicate reasons if already added by custom logic above
+          if (!reasons.includes(rule.id)) {
+              reasons.push(rule.id);
+              rule.tags.forEach(tag => tags.add(tag));
+              totalSeverity += rule.severity;
+          }
         }
     } catch (e) {
         console.error("URL rule regex error", e);
     }
   }
 
-  // 8. Heuristic: Text vs URL Mismatch
-  // (e.g. text says "paypal.com" but URL is "paypal-verify.net")
+  // 9. Heuristic: Text vs URL Mismatch
   if (messageText) {
       const lowerText = messageText.toLowerCase();
       // Simple heuristic: if text mentions a high-profile domain but the URL is different
       const commonBrands = ['paypal', 'apple', 'google', 'amazon', 'facebook', 'microsoft', 'netflix', 'bank'];
 
       for (const brand of commonBrands) {
-          if (lowerText.includes(brand) && !domain.includes(brand)) {
-               // Text mentions brand, URL does not -> Mismatch
-               // But wait, "paypal-verify" includes paypal.
-               // This is tricky. Let's say if text says "paypal.com" explicitly
-               if (lowerText.includes(brand + '.com') && !domain.includes(brand + '.com')) {
+          // If text says "paypal.com" explicitly
+          if (lowerText.includes(brand + '.com') || lowerText.includes(brand + ' .com')) {
+               if (!domain.includes(brand)) {
                    totalSeverity += 40;
-                   reasons.push("domain_mismatch"); // Text claims domain X, URL is Y
+                   reasons.push("domain_mismatch");
                    tags.add("impersonation");
                    break;
                }
@@ -223,7 +253,9 @@ export function analyzeUrl(url: string, messageText?: string): AnalysisResult {
       // Also check if @ exists in URL (basic credential harvesting pattern)
       if (expandedUrl.includes('@')) {
           totalSeverity += 50;
-          reasons.push("url_has_at_symbol");
+          if (!reasons.includes("at_symbol")) {
+              reasons.push("at_symbol");
+          }
           tags.add("credential_harvesting");
       }
   }
@@ -233,7 +265,7 @@ export function analyzeUrl(url: string, messageText?: string): AnalysisResult {
 
   return {
     score,
-    reasons,
+    reasons: Array.from(new Set(reasons)), // Dedupe
     tags: Array.from(tags),
     analyzedUrl: expandedUrl
   };
