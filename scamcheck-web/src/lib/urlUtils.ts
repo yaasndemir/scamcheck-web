@@ -2,21 +2,29 @@ import unshortenMap from '@/data/unshortenMap.json';
 import domainAgeData from '@/data/domainAgeMock.json';
 
 /**
+ * Extracts all URLs from a given text.
+ * Trims punctuation from the end (.,).
+ */
+export const extractAllUrls = (text: string): string[] => {
+  if (!text) return [];
+  // Regex to capture http/https URLs.
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  const matches = text.match(urlRegex);
+  if (!matches) return [];
+
+  return matches.map(url => {
+      // Remove trailing punctuation that might have been captured
+      return url.replace(/[.,;!?)]+$/, "");
+  });
+};
+
+/**
  * Extracts the first URL from a given text.
  * Trims punctuation from the end (.,).
  */
 export const extractFirstUrl = (text: string): string | null => {
-  if (!text) return null;
-  // Regex to capture http/https URLs.
-  // We use a somewhat inclusive regex then clean up
-  const urlRegex = /(https?:\/\/[^\s]+)/g;
-  const match = text.match(urlRegex);
-  if (!match) return null;
-
-  let url = match[0];
-  // Remove trailing punctuation that might have been captured (e.g. "Visit google.com.")
-  url = url.replace(/[.,;!?)]+$/, "");
-  return url;
+  const urls = extractAllUrls(text);
+  return urls.length > 0 ? urls[0] : null;
 };
 
 // Re-export for compatibility if needed, or deprecate
@@ -51,9 +59,22 @@ export const getDomain = (url: string): string | null => {
  */
 export const isIpAddress = (url: string): boolean => {
     try {
-        const { hostname } = new URL(url);
-        // IPv4 regex (simplified)
-        return /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(hostname);
+        // We only care about the hostname part for IP check
+        // If url is just "127.0.0.1", new URL might fail if no protocol.
+        // So we try to handle both full URL and just host.
+        let hostname = url;
+        try {
+             const parsed = new URL(url);
+             hostname = parsed.hostname;
+        } catch {
+            // treat as raw string
+        }
+
+        // IPv4 regex (simplified but strict enough for this context)
+        // 0-255.0-255.0-255.0-255
+        // (Note: this simple regex doesn't validate 0-255 range strictly, but good enough for classification)
+        const ipRegex = /^(\d{1,3}\.){3}\d{1,3}$/;
+        return ipRegex.test(hostname);
     } catch {
         return false;
     }
@@ -71,16 +92,12 @@ export const isPunycode = (hostname: string): boolean => {
  * Returns the expanded URL if found in local map, otherwise returns original URL.
  */
 export const resolveShortUrlMock = (url: string): string => {
-    // Check exact match (without protocol if needed, but map keys are likely loose)
-    // For simplicity, let's try to match keys in the map with the input URL
-    // We normalize by removing protocol for key lookup if map has no protocol,
-    // but our mock map has keys like "bit.ly/scam1".
+    if (!url) return url;
 
     // Normalize input to strip protocol for lookup
     const cleanInput = url.replace(/^https?:\/\//, '');
 
     // Check if any key in map is contained in the input
-    // This is a simple mock implementation
     const map = unshortenMap as Record<string, string>;
 
     for (const [short, expanded] of Object.entries(map)) {
@@ -109,5 +126,20 @@ export const getDomainAgeMock = (hostname: string): number | null => {
             return data[rootDomain];
         }
     }
-    return null; // Unknown
+
+    // Deterministic simulation for unknown domains based on hash
+    // This ensures consistency across runs for same domain
+    let hash = 0;
+    for (let i = 0; i < hostname.length; i++) {
+        hash = ((hash << 5) - hash) + hostname.charCodeAt(i);
+        hash |= 0;
+    }
+    const absHash = Math.abs(hash);
+
+    // Simulate: 20% very new (<30 days), 20% medium (<180 days), 60% old
+    const mod = absHash % 100;
+    if (mod < 20) return absHash % 30; // 0-29 days
+    if (mod < 40) return 30 + (absHash % 150); // 30-179 days
+
+    return null; // Assume old/safe-ish or unknown for majority
 };
