@@ -1,62 +1,39 @@
 import {useTranslations} from 'next-intl';
+import ScamChecker from '@/components/ScamChecker';
 
-export default function HomePage() {
-  const t = useTranslations('HomePage');
+export default async function HomePage({params}: {params: Promise<{locale: string}>}) {
+  const {locale} = await params;
+
+  // Note: We're using useTranslations here just to pass the title/description for SEO/SSR if needed,
+  // but the main logic is in the client component.
+  // Actually, for a pure client experience inside the layout, we can just render the client component.
+
+  // We need to fetch translations on the server if we want to render static parts,
+  // but ScamChecker handles its own translations via client-side useTranslations.
 
   return (
-    <main className="min-h-screen p-8 flex flex-col items-center justify-center">
-      <div className="w-full max-w-2xl bg-white shadow-lg rounded-xl p-8">
-        <h1 className="text-3xl font-bold mb-4 text-center text-blue-600">{t('title')}</h1>
-        <p className="text-gray-600 text-center mb-8">{t('description')}</p>
+    <main className="min-h-screen bg-gray-50/30">
+        {/* Header Background Gradient */}
+        <div className="absolute inset-0 h-96 bg-gradient-to-b from-blue-50 to-transparent -z-10" />
 
-        <div className="space-y-6">
-          <div>
-            <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">{t('messageLabel')}</label>
-            <textarea
-              id="message"
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none h-32 resize-none"
-              placeholder={t('messagePlaceholder')}
-            ></textarea>
-          </div>
-
-          <div>
-             <label htmlFor="url" className="block text-sm font-medium text-gray-700 mb-2">{t('urlLabel')}</label>
-            <input
-              type="text"
-              id="url"
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              placeholder={t('urlPlaceholder')}
-            />
-          </div>
-
-          <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition duration-200">
-            {t('analyzeButton')}
-          </button>
-        </div>
-
-        <div className="mt-10 pt-8 border-t border-gray-200">
-          <h2 className="text-xl font-semibold mb-4 text-gray-800">{t('resultTitle')}</h2>
-
-          {/* Mock Result Cards */}
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="bg-red-50 border border-red-200 p-4 rounded-lg">
-              <div className="flex items-center mb-2">
-                <span className="bg-red-500 w-3 h-3 rounded-full mr-2"></span>
-                <h3 className="font-semibold text-red-700">High Risk</h3>
-              </div>
-              <p className="text-sm text-red-600">This URL has been reported as phishing.</p>
+        <div className="container mx-auto px-4 py-12 md:py-20 flex flex-col items-center">
+            {/* Header */}
+            <div className="text-center mb-12 max-w-2xl">
+                <div className="inline-flex items-center justify-center p-3 bg-blue-100 rounded-2xl mb-6">
+                    <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                    </svg>
+                </div>
+                <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight mb-4">
+                    ScamCheck
+                </h1>
+                <p className="text-lg md:text-xl text-gray-600 font-medium">
+                    Analyze messages instantly. Detect threats securely.
+                </p>
             </div>
 
-            <div className="bg-green-50 border border-green-200 p-4 rounded-lg">
-              <div className="flex items-center mb-2">
-                <span className="bg-green-500 w-3 h-3 rounded-full mr-2"></span>
-                <h3 className="font-semibold text-green-700">Safe</h3>
-              </div>
-              <p className="text-sm text-green-600">Content analysis shows no suspicious keywords.</p>
-            </div>
-          </div>
+            <ScamChecker locale={locale} />
         </div>
-      </div>
     </main>
   );
 }

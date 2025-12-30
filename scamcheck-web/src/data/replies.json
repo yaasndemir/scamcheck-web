@@ -1,0 +1,107 @@
+{
+  "categories": ["bank", "delivery", "job", "support", "romance", "investment"],
+  "templates": {
+    "bank": {
+      "en": [
+        "I will contact my bank directly through their official website to verify this request. I will not click on any links provided.",
+        "Please stop messaging me. I do not share personal or financial information via text message.",
+        "I suspect this is a scam and I have reported this number to my bank's fraud department."
+      ],
+      "tr": [
+        "Bu isteği doğrulamak için bankamla doğrudan resmi web sitesi üzerinden iletişime geçeceğim. Gönderilen linklere tıklamayacağım.",
+        "Lütfen bana mesaj atmayı bırakın. Kişisel veya finansal bilgilerimi mesaj yoluyla paylaşmıyorum.",
+        "Bunun bir dolandırıcılık olduğundan şüpheleniyorum ve bu numarayı bankamın dolandırıcılık birimine bildirdim."
+      ],
+      "de": [
+        "Ich werde meine Bank direkt über deren offizielle Website kontaktieren, um diese Anfrage zu überprüfen. Ich werde keine Links anklicken.",
+        "Bitte hören Sie auf, mir Nachrichten zu senden. Ich gebe keine persönlichen oder finanziellen Informationen per SMS weiter.",
+        "Ich vermute, dass es sich hierbei um einen Betrug handelt, und habe diese Nummer der Betrugsabteilung meiner Bank gemeldet."
+      ]
+    },
+    "delivery": {
+      "en": [
+        "I am not expecting any package. I will check the official courier website with my tracking number if I have one.",
+        "I will not pay any delivery fees via a link. Legitimate companies do not ask for this via text.",
+        "Stop sending these messages. I have reported this as spam."
+      ],
+      "tr": [
+        "Herhangi bir kargo beklemiyorum. Eğer bir takip numaram varsa resmi kargo sitesinden kontrol edeceğim.",
+        "Link üzerinden herhangi bir teslimat ücreti ödemeyeceğim. Yasal şirketler bunu mesaj yoluyla istemez.",
+        "Bu mesajları göndermeyi bırakın. Bunu spam olarak bildirdim."
+      ],
+      "de": [
+        "Ich erwarte kein Paket. Ich werde die offizielle Website des Kurierdienstes mit meiner Sendungsnummer überprüfen, falls ich eine habe.",
+        "Ich werde keine Liefergebühren über einen Link bezahlen. Seriöse Unternehmen fordern dies nicht per SMS an.",
+        "Hören Sie auf, diese Nachrichten zu senden. Ich habe dies als Spam gemeldet."
+      ]
+    },
+    "job": {
+      "en": [
+        "I only apply for jobs through official channels like LinkedIn or company websites. Please do not contact me.",
+        "This offer seems too good to be true. I will not provide any personal details or pay for equipment upfront.",
+        "I am not interested in 'easy money' schemes. Removing my number from your list is requested."
+      ],
+      "tr": [
+        "Sadece LinkedIn veya şirket web siteleri gibi resmi kanallar üzerinden iş başvurusu yapıyorum. Lütfen benimle iletişime geçmeyin.",
+        "Bu teklif gerçek olamayacak kadar iyi görünüyor. Kişisel bilgilerimi vermeyeceğim veya ekipman için önden ödeme yapmayacağım.",
+        " 'Kolay para' yöntemleriyle ilgilenmiyorum. Numaramı listenizden çıkarmanızı talep ediyorum."
+      ],
+      "de": [
+        "Ich bewerbe mich nur über offizielle Kanäle wie LinkedIn oder Firmenwebsites. Bitte kontaktieren Sie mich nicht.",
+        "Dieses Angebot scheint zu gut, um wahr zu sein. Ich werde keine persönlichen Daten preisgeben oder im Voraus für Ausrüstung bezahlen.",
+        "Ich bin nicht an Methoden für 'leichtes Geld' interessiert. Bitte löschen Sie meine Nummer aus Ihrer Liste."
+      ]
+    },
+    "support": {
+      "en": [
+        "I will log in to my account directly to check for any alerts. I will not click your link.",
+        "Official support teams do not ask for passwords or 2FA codes. I will not share them.",
+        "This conversation is being recorded and reported to the platform's safety team."
+      ],
+      "tr": [
+        "Herhangi bir uyarı olup olmadığını kontrol etmek için hesabıma doğrudan giriş yapacağım. Linkinize tıklamayacağım.",
+        "Resmi destek ekipleri şifre veya 2FA kodu istemez. Bunları paylaşmayacağım.",
+        "Bu konuşma kaydediliyor ve platformun güvenlik ekibine bildiriliyor."
+      ],
+      "de": [
+        "Ich werde mich direkt in mein Konto einloggen, um nach Warnungen zu suchen. Ich werde Ihren Link nicht anklicken.",
+        "Offizielle Support-Teams fragen nicht nach Passwörtern oder 2FA-Codes. Ich werde diese nicht weitergeben.",
+        "Dieses Gespräch wird aufgezeichnet und dem Sicherheitsteam der Plattform gemeldet."
+      ]
+    },
+    "romance": {
+      "en": [
+        "I do not send money to people I have not met in person. Please respect my boundaries.",
+        "If you are real, we can meet in a public place. Until then, no financial requests.",
+        "I am not comfortable with this conversation. Please stop contacting me."
+      ],
+      "tr": [
+        "Yüz yüze tanışmadığım insanlara para göndermiyorum. Lütfen sınırlarımı ihlal etmeyin.",
+        "Eğer gerçekseniz, halka açık bir yerde buluşabiliriz. O zamana kadar, para istemeyin.",
+        "Bu konuşmadan rahatsız oluyorum. Lütfen benimle iletişime geçmeyin."
+      ],
+      "de": [
+        "Ich sende kein Geld an Personen, die ich nicht persönlich getroffen habe. Bitte respektieren Sie meine Grenzen.",
+        "Wenn Sie echt sind, können wir uns an einem öffentlichen Ort treffen. Bis dahin keine finanziellen Forderungen.",
+        "Ich fühle mich bei diesem Gespräch nicht wohl. Bitte hören Sie auf, mich zu kontaktieren."
+      ]
+    },
+    "investment": {
+      "en": [
+        "I have a financial advisor and do not make investments based on unsolicited messages.",
+        "Guaranteed high returns are usually scams. I am not interested.",
+        "Remove me from your contact list immediately."
+      ],
+      "tr": [
+        "Bir mali danışmanım var ve talep edilmeyen mesajlara dayanarak yatırım yapmıyorum.",
+        "Garantili yüksek getiriler genellikle dolandırıcılıktır. İlgilenmiyorum.",
+        "Beni derhal kişi listenizden çıkarın."
+      ],
+      "de": [
+        "Ich habe einen Finanzberater und tätige keine Investitionen aufgrund von unaufgeforderten Nachrichten.",
+        "Garantierte hohe Renditen sind meistens Betrug. Ich bin nicht interessiert.",
+        "Entfernen Sie mich sofort von Ihrer Kontaktliste."
+      ]
+    }
+  }
+}
