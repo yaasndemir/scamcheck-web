@@ -9,6 +9,7 @@ To run the tests:
 
 ```bash
 cd scamcheck-web
+npx playwright install --with-deps
 npm run test:e2e
 ```
 
