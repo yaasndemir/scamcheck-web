@@ -78,12 +78,52 @@ export function analyzeText(text: string, locale: string = 'en'): AnalysisResult
   // Normalize text for case-insensitive matching
   const normalizedText = textToAnalyze.toLowerCase();
 
+  // --- Category 1: Financial Threat (+40 Puan) ---
+  const financialKeywords = [
+      "iban", "eft", "havale", "işlem ücreti", "depozito", "gümrük vergisi",
+      "transaction fee", "deposit", "customs tax", "wire transfer",
+      "bearbeitungsgebühr", "zollgebühr", "überweisung"
+  ];
+  let financialDetected = false;
+  for (const keyword of financialKeywords) {
+      if (normalizedText.includes(keyword)) {
+          if (!financialDetected) {
+              totalSeverity += 40;
+              financialDetected = true;
+          }
+          tags.add("financial_threat");
+          reasons.push("financial_keywords"); // Ensure this key exists in translations or logic
+          break;
+      }
+  }
+
+  // --- Category 2: Urgency (+30 Puan) ---
+  const urgencyKeywords = [
+      "son 10 dk", "hemen", "iptal edilecek", "hesabınız kısıtlandı", "acil",
+      "last 10 min", "immediately", "will be cancelled", "account restricted", "urgent",
+      "letzte 10 min", "sofort", "storniert", "konto eingeschränkt", "dringend"
+  ];
+  let urgencyDetected = false;
+  for (const keyword of urgencyKeywords) {
+      if (normalizedText.includes(keyword)) {
+          if (!urgencyDetected) {
+              totalSeverity += 30;
+              urgencyDetected = true;
+          }
+          tags.add("urgency");
+          reasons.push("urgency_keywords");
+          break;
+      }
+  }
+
   // Ensure locale exists in patterns, fallback to 'en' if not found
   const targetLocale = ['en', 'tr', 'de'].includes(locale) ? locale : 'en';
 
   let matchCount = 0;
   const MAX_MATCHES = 25; // Circuit breaker
 
+  // Include existing JSON based rules but be careful not to double count significantly if already covered
+  // OR treat JSON rules as supplementary
   for (const rule of rawRules.textRules) {
       if (matchCount >= MAX_MATCHES) break;
 
@@ -107,12 +147,18 @@ export function analyzeText(text: string, locale: string = 'en'): AnalysisResult
     }
   }
 
+  // Edge Case - Temiz Metin: If no URL and no specific threat found, ensure 0
+  // (Handled by initialization of totalSeverity = 0)
+  // But wait, if we found existing JSON rules, score might be > 0.
+  // The requirement says: "Eğer metinde URL yoksa ve sadece 'npm run build' gibi teknik/zararsız metin varsa, skor 0 olmalı"
+  // This implies if no specific keywords or rules matched, it stays 0.
+
   // Cap score at 100
   const score = Math.min(100, Math.max(0, totalSeverity));
 
   return {
     score,
-    reasons,
+    reasons: Array.from(new Set(reasons)),
     tags: Array.from(tags)
   };
 }
@@ -133,11 +179,20 @@ export function analyzeUrl(url: string, messageText?: string): AnalysisResult {
   // 1. Unshorten simulation
   const expandedUrl = resolveShortUrlMock(url);
   const isShortened = expandedUrl !== url;
-  if (isShortened) {
+
+  // Category 3: Technical Manipulation - Shortener (+20 Puan)
+  const shortenerDomains = ["bit.ly", "t.ly", "tinyurl.com", "goo.gl", "ow.ly", "is.gd", "buff.ly"];
+  let isKnownShortener = false;
+  try {
+      const hostname = new URL(url).hostname;
+      isKnownShortener = shortenerDomains.some(d => hostname.includes(d));
+  } catch (e) { /* ignore */ }
+
+  if (isShortened || isKnownShortener) {
       tags.add("url_shortener");
+      tags.add("obfuscation");
       reasons.push("shortener");
-      // Add a small risk for using a shortener
-      totalSeverity += 10;
+      totalSeverity += 20; // Requirement: +20 Puan
   }
 
   // 2. Extract domain and hostname
@@ -147,10 +202,10 @@ export function analyzeUrl(url: string, messageText?: string): AnalysisResult {
   }
 
   // 3. Whitelist Check (Reputation)
-  // Check strict equality or subdomain
   const isAllowed = allowlist.some(safe => domain === safe || domain.endsWith('.' + safe));
   if (isAllowed) {
       tags.add("trusted_domain");
+      // Even if trusted, if context is suspicious, we might warn, but let's keep it safe.
       return {
           score: 5, // Non-zero to show it was analyzed
           reasons: ["trusted_domain_match"],
@@ -180,47 +235,77 @@ export function analyzeUrl(url: string, messageText?: string): AnalysisResult {
       }
   }
 
-  // 6. Punycode / Homograph (Basic)
+  // --- Category 3: Technical Manipulation ---
+
+  // Homograph Attack (+60 Puan)
   if (isPunycode(domain)) {
-      totalSeverity += 60; // Increased from 20 to 60 as per requirements
+      totalSeverity += 60; // Requirement: +60 Puan
       reasons.push("punycode");
       tags.add("homograph_risk");
   }
 
-  // Advanced Homograph/Mixed Character detection (Regex based)
-  // Assuming "mixed_script" rule handles Cyrillic/Latin mix
+  // Simple Homograph visual check (paypaI vs paypal)
+  // This is hard to do perfectly without a list of target brands, but we can check mixed lookalikes
+  // or specific patterns if needed.
+  // For now, Punycode is the main technical detector.
+  // Requirement mentions "paypaI.com" (capital I).
+  // We can add a simple check for common spoof targets in the string itself if needed.
+  const commonSpoofs = [
+    { target: "paypal", variants: ["paypaI", "paypai", "paypa1"] },
+    { target: "google", variants: ["googIe", "googie", "g00gle"] },
+    { target: "apple", variants: ["appIe", "appie", "app1e"] }
+  ];
 
-  // 7. IP Address + Port + Login Logic (Requirement P0.3)
-  if (isIpAddress(expandedUrl)) {
-      totalSeverity += 50; // Base penalty for IP usage
-      // Check for port
-      if (/:\d+/.test(expandedUrl)) {
-          // Check if port is not 80 or 443
-          const portMatch = expandedUrl.match(/:(\d+)/);
-          if (portMatch) {
-              const port = parseInt(portMatch[1], 10);
-              if (port !== 80 && port !== 443) {
-                  totalSeverity += 30;
-                  reasons.push("port_in_url");
-              }
+  for(const spoof of commonSpoofs) {
+      for(const variant of spoof.variants) {
+          if (domain.includes(variant)) {
+               totalSeverity += 60;
+               reasons.push("homograph_spoof");
+               tags.add("homograph_risk");
+               break;
           }
       }
-
-      // Check for sensitive paths in IP URL
-      if (/login|signin|verify|update|secure|account|bank/i.test(expandedUrl)) {
-          totalSeverity += 40;
-          reasons.push("login_keyword");
-          tags.add("phishing_ip");
-      }
-
-      reasons.push("ip_address_url");
   }
 
-  // 8. Regex Rules
+
+  // IP:Port Tespiti (Category 3)
+  if (isIpAddress(expandedUrl)) {
+      let ipRisk = false;
+
+      // Check for port
+      // URL object handles port extraction
+      try {
+          const urlObj = new URL(expandedUrl);
+          if (urlObj.port) {
+               const port = parseInt(urlObj.port, 10);
+               if (port !== 80 && port !== 443) {
+                   // Standard dışı port -> Direkt Yüksek Risk
+                   totalSeverity += 70; // "Direkt Yüksek Risk" interpreted as critical points
+                   reasons.push("suspicious_port");
+                   tags.add("non_standard_port");
+                   ipRisk = true;
+               }
+          }
+      } catch (e) { /* invalid url format handled earlier */ }
+
+      // If just IP without standard port issue, still risky
+      if (!ipRisk) {
+          totalSeverity += 50;
+          reasons.push("ip_address_url");
+      }
+  }
+
+  // Login Path (+50 Puan)
+  if (/login|signin|verify|guvenlik|account|secure|update|bank/i.test(expandedUrl)) {
+      totalSeverity += 50; // Requirement: +50 Puan
+      reasons.push("login_keyword");
+      tags.add("sensitive_path");
+  }
+
+  // 8. Regex Rules from JSON
   for (const rule of compiledUrlRules) {
     try {
         if (rule.compiledRegex.test(expandedUrl)) {
-          // Avoid duplicate reasons if already added by custom logic above
           if (!reasons.includes(rule.id)) {
               reasons.push(rule.id);
               rule.tags.forEach(tag => tags.add(tag));
@@ -235,11 +320,9 @@ export function analyzeUrl(url: string, messageText?: string): AnalysisResult {
   // 9. Heuristic: Text vs URL Mismatch
   if (messageText) {
       const lowerText = messageText.toLowerCase();
-      // Simple heuristic: if text mentions a high-profile domain but the URL is different
       const commonBrands = ['paypal', 'apple', 'google', 'amazon', 'facebook', 'microsoft', 'netflix', 'bank'];
 
       for (const brand of commonBrands) {
-          // If text says "paypal.com" explicitly
           if (lowerText.includes(brand + '.com') || lowerText.includes(brand + ' .com')) {
                if (!domain.includes(brand)) {
                    totalSeverity += 40;
@@ -250,7 +333,6 @@ export function analyzeUrl(url: string, messageText?: string): AnalysisResult {
           }
       }
 
-      // Also check if @ exists in URL (basic credential harvesting pattern)
       if (expandedUrl.includes('@')) {
           totalSeverity += 50;
           if (!reasons.includes("at_symbol")) {
