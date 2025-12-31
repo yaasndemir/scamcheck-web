@@ -15,20 +15,19 @@ import {
   History,
   Trash2,
   Share2,
-  AlertCircle,
   Image as ImageIcon,
   Search,
   Shield,
   Loader2,
-  ChevronDown
+  Circle
 } from 'lucide-react';
-import { analyzeText, analyzeUrl, AnalysisResult } from '@/lib/rulesEngine';
+import { useScamAnalysis } from '@/hooks/useScamAnalysis';
 import repliesData from '@/data/replies.json';
 import explanationsData from '@/data/explanations.json';
 import rulesData from '@/data/rules.json';
 import { cn } from '@/lib/utils';
-import { extractAllUrls, extractFirstUrl, isValidUrl, getDomain, isPunycode } from '@/lib/urlUtils';
-import { getHistory, addToHistory, clearHistory, AnalysisHistoryItem } from '@/lib/history';
+import { extractAllUrls, isValidUrl, getDomain, isPunycode } from '@/lib/urlUtils';
+import { clearHistory, AnalysisHistoryItem } from '@/lib/history';
 import { Button } from './ui/Button';
 import { Textarea } from './ui/Textarea';
 import { Input } from './ui/Input';
@@ -60,37 +59,63 @@ const getExplanation = (ruleId: string, locale: string): string => {
 
 export default function ScamChecker({ locale }: ScamCheckerProps) {
   const t = useTranslations('HomePage');
-  const [text, setText] = useState('');
 
-  // URL State Management
-  const [url, setUrl] = useState('');
-  const [showUrlInput, setShowUrlInput] = useState(false);
-  const [autoDetectUrl, setAutoDetectUrl] = useState(true);
-  const [manualUrlInput, setManualUrlInput] = useState(false);
+  // Use the new custom hook
+  const {
+    text,
+    setText,
+    url,
+    setUrl,
+    detectedUrls,
+    selectedDetectedUrlIndex,
+    setSelectedDetectedUrlIndex,
+    showUrlInput,
+    setShowUrlInput,
+    autoDetectUrl,
+    setAutoDetectUrl,
+    manualUrlInput,
+    setManualUrlInput,
+    isAnalyzing,
+    result,
+    error,
+    handleTextChange,
+    handleUrlChange,
+    handleAnalyze,
+    handleSelectDetectedUrl,
+    handleClearUrl,
+    resetAnalysis,
+    history,
+    setHistory
+  } = useScamAnalysis({ locale, autoDetectEnabled: true });
 
-  // Multi-URL Support
-  const [detectedUrls, setDetectedUrls] = useState<string[]>([]);
-  const [selectedDetectedUrlIndex, setSelectedDetectedUrlIndex] = useState(0);
-
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [result, setResult] = useState<AnalysisResult | null>(null);
   const [activeTab, setActiveTab] = useState<'results' | 'safeReply'>('results');
   const [selectedCategory, setSelectedCategory] = useState<ReplyCategory>('bank');
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
-  const [error, setError] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<{message: string, type: 'success' | 'error' | 'default'} | null>(null);
   const [historyOpen, setHistoryOpen] = useState(false);
-  const [history, setHistory] = useState<AnalysisHistoryItem[]>([]);
-
   const [ocrLoading, setOcrLoading] = useState(false);
 
   const resultsRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Load history on mount
+  // Auto-scroll to results when analysis completes
   useEffect(() => {
-    setHistory(getHistory());
-  }, []);
+    if (result && !isAnalyzing) {
+        setActiveTab('results');
+        setTimeout(() => {
+            resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+
+        // Smart Safe Reply Suggestion logic
+        const lowerTags = result.tags.map(t => t.toLowerCase());
+        if (lowerTags.includes('bank') || lowerTags.includes('financial_info') || lowerTags.includes('otp')) setSelectedCategory('bank');
+        else if (lowerTags.includes('delivery') || lowerTags.includes('smishing')) setSelectedCategory('delivery');
+        else if (lowerTags.includes('job_scam')) setSelectedCategory('job');
+        else if (lowerTags.includes('romance_scam')) setSelectedCategory('romance');
+        else if (lowerTags.includes('investment_scam') || lowerTags.includes('crypto_scam')) setSelectedCategory('investment');
+        else if (lowerTags.includes('impersonation') || lowerTags.includes('support')) setSelectedCategory('support');
+    }
+  }, [result, isAnalyzing]);
 
   // Show toast
   const showToast = (message: string, type: 'success' | 'error' | 'default' = 'default') => {
@@ -108,64 +133,9 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
       demoText = "Urgent! Your account has been suspended. Verify immediately at: http://secure-banking-alert.com";
     }
 
-    // Clear previous results
-    setResult(null);
-    setError(null);
-    setManualUrlInput(false);
-
-    // Set text which triggers extraction logic if we were calling handleChange
-    // But since we set directly, we must invoke logic manually
-    setText(demoText);
-
-    if (autoDetectUrl) {
-      const urls = extractAllUrls(demoText);
-      setDetectedUrls(urls);
-      if (urls.length > 0) {
-          setSelectedDetectedUrlIndex(0);
-          setUrl(urls[0]);
-          setShowUrlInput(true);
-      } else {
-          setUrl('');
-      }
-    }
-
+    resetAnalysis();
+    handleTextChange(demoText); // This will also trigger URL extraction in the hook
     showToast(t('inputSection.demoLoaded') || "Demo loaded", 'default');
-  };
-
-  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newText = e.target.value;
-    setText(newText);
-    setError(null);
-
-    // Reset Analysis Result on text change to avoid stale state
-    // But we might want to keep it until they click Analyze?
-    // Requirement says: "expandedUrl ... MUST reset each run".
-    // It's safer to clear results if the input significantly changes, but standard UX is to keep results until new analysis.
-    // However, for stale URL issue, let's keep it but ensure next analysis clears it.
-    // Actually, if we change text, the "Expanded: ..." which is bound to result might be confusing if it refers to old text.
-    // Let's NOT clear result immediately to allow user to read while editing, but we MUST ensure everything resets on Analyze.
-
-    // Auto-detect logic
-    const urls = extractAllUrls(newText);
-    setDetectedUrls(urls);
-
-    if (autoDetectUrl && !manualUrlInput) {
-        if (urls.length > 0) {
-            // Default to first URL
-            setSelectedDetectedUrlIndex(0);
-            setUrl(urls[0]);
-            setShowUrlInput(true);
-        } else {
-            // Only clear if we are in auto mode and no manual override
-            setUrl('');
-        }
-    }
-  };
-
-  const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setUrl(e.target.value);
-      setManualUrlInput(true);
-      setError(null);
   };
 
   const handleAutoDetectToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -173,10 +143,8 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
       setAutoDetectUrl(checked);
 
       if (checked) {
-          // If turned ON, run detection if not manual override
           if (!manualUrlInput) {
               const urls = extractAllUrls(text);
-              setDetectedUrls(urls);
               if (urls.length > 0) {
                   setSelectedDetectedUrlIndex(0);
                   setUrl(urls[0]);
@@ -186,118 +154,6 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
               }
           }
       }
-  };
-
-  const handleSelectDetectedUrl = (index: number) => {
-      if (index >= 0 && index < detectedUrls.length) {
-          setSelectedDetectedUrlIndex(index);
-          setUrl(detectedUrls[index]);
-          // If user selects from detected list, we effectively reset manual override or treat it as auto
-          // Let's treat it as "auto-selected" so it updates if text updates?
-          // No, if user explicitly picks one, it should stick until text changes again.
-          // But to be safe, let's keep manualUrlInput false so auto-detect logic continues to work if text changes
-          // effectively resetting selection to 0 if text changes significantly.
-          setManualUrlInput(false);
-      }
-  };
-
-  const handleClearUrl = () => {
-      setUrl('');
-      setManualUrlInput(false);
-      // If autoDetect is on, it will re-populate on next text change or we can force it?
-      // Requirement: "reset to auto" button or icon.
-      // If user clears, maybe they want no URL.
-      // If they want to re-detect, they can toggle auto-detect off/on.
-
-      // But if they just want to clear the manual entry and revert to auto:
-      if (autoDetectUrl) {
-           const urls = extractAllUrls(text);
-           if (urls.length > 0) {
-               setUrl(urls[0]); // Revert to first detected
-               setShowUrlInput(true);
-           }
-      }
-  };
-
-  const handleAnalyze = async () => {
-    // Whitespace guard
-    const isTextEmpty = !text || !text.trim();
-    const isUrlEmpty = !url || !url.trim();
-
-    if (isTextEmpty && isUrlEmpty) {
-        setError(t('inputSection.errorEmpty') || "Please enter text or a URL.");
-        return;
-    }
-
-    setIsAnalyzing(true);
-    setResult(null); // CRITICAL: Clear previous state completely
-    setError(null);
-
-    // Simulate reliable analysis time for UX
-    const delay = 600 + Math.random() * 600;
-    await new Promise(resolve => setTimeout(resolve, delay));
-
-    // Determine what to analyze
-    const textResult = analyzeText(text, locale);
-    let urlResult = { score: 0, reasons: [], tags: [] } as AnalysisResult;
-
-    const urlToAnalyze = url.trim();
-
-    if (urlToAnalyze) {
-        if (!isValidUrl(urlToAnalyze)) {
-             setIsAnalyzing(false);
-             setError(t('inputSection.invalidUrl') || "Invalid URL provided.");
-             return;
-        }
-        // Pass text for mismatch detection
-        urlResult = analyzeUrl(urlToAnalyze, text);
-    }
-
-    // Combine results
-    const finalScore = Math.max(textResult.score, urlResult.score);
-    const finalReasons = Array.from(new Set([...textResult.reasons, ...urlResult.reasons]));
-    const finalTags = Array.from(new Set([...textResult.tags, ...urlResult.tags]));
-
-    // Check if we only did text analysis
-    const isTextOnly = !urlToAnalyze;
-
-    const analysisResult = {
-      score: finalScore,
-      reasons: finalReasons,
-      tags: finalTags,
-      analyzedUrl: urlResult.analyzedUrl // will be undefined if text only
-    };
-
-    setResult(analysisResult);
-    setIsAnalyzing(false);
-    setActiveTab('results');
-
-    // Add to history
-    const historyItem: AnalysisHistoryItem = {
-        id: Date.now().toString(),
-        timestamp: Date.now(),
-        score: finalScore,
-        severity: finalScore < 30 ? 'low' : finalScore < 70 ? 'medium' : 'high',
-        domain: urlToAnalyze ? getDomain(urlToAnalyze) : 'Text Only',
-        tags: finalTags
-    };
-    addToHistory(historyItem);
-    setHistory(getHistory());
-
-    // Auto-scroll to results
-    setTimeout(() => {
-        resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
-
-    // Smart Safe Reply Suggestion logic (same as before)
-    const lowerTags = finalTags.map(t => t.toLowerCase());
-    if (lowerTags.includes('bank') || lowerTags.includes('financial_info') || lowerTags.includes('otp')) setSelectedCategory('bank');
-    else if (lowerTags.includes('delivery') || lowerTags.includes('smishing')) setSelectedCategory('delivery');
-    else if (lowerTags.includes('job_scam')) setSelectedCategory('job');
-    else if (lowerTags.includes('romance_scam')) setSelectedCategory('romance');
-    else if (lowerTags.includes('investment_scam') || lowerTags.includes('crypto_scam')) setSelectedCategory('investment');
-    else if (lowerTags.includes('impersonation') || lowerTags.includes('support')) setSelectedCategory('support');
-
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -328,22 +184,7 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
               {}
           );
 
-          setText(extractedText);
-          setError(null);
-
-          // Trigger auto-detect logic manually
-          const urls = extractAllUrls(extractedText);
-          setDetectedUrls(urls);
-          if (autoDetectUrl && !manualUrlInput) {
-              if (urls.length > 0) {
-                  setSelectedDetectedUrlIndex(0);
-                  setUrl(urls[0]);
-                  setShowUrlInput(true);
-              } else {
-                  setUrl('');
-              }
-          }
-
+          handleTextChange(extractedText);
           showToast(t('inputSection.ocrSuccess') || "Text extracted from image", 'success');
       } catch (err) {
           console.error(err);
@@ -361,10 +202,14 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
     setTimeout(() => setCopiedIndex(null), 2000);
   };
 
+  // Updated Severity Risk Indicators
   const getSeverity = (score: number) => {
-    if (score < 30) return { label: t('results.severity.low'), color: 'text-green-700 bg-green-50 border-green-200', icon: ShieldCheck };
-    if (score < 70) return { label: t('results.severity.medium'), color: 'text-amber-700 bg-amber-50 border-amber-200', icon: AlertTriangle };
-    return { label: t('results.severity.high'), color: 'text-red-700 bg-red-50 border-red-200', icon: ShieldAlert };
+    // 0-30: Safe (Green)
+    if (score <= 30) return { label: t('results.severity.low'), color: 'text-green-700 bg-green-50 border-green-200', icon: ShieldCheck, borderColor: 'border-green-500' };
+    // 31-70: Suspicious (Orange)
+    if (score <= 70) return { label: t('results.severity.medium'), color: 'text-orange-700 bg-orange-50 border-orange-200', icon: AlertTriangle, borderColor: 'border-orange-500' };
+    // 71-100: Danger (Red)
+    return { label: t('results.severity.high'), color: 'text-red-700 bg-red-50 border-red-200', icon: ShieldAlert, borderColor: 'border-red-600 bg-red-50/10' };
   };
 
   const shareResult = () => {
@@ -428,7 +273,7 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
                                         <Badge variant="outline" className={cn(
                                             "text-[10px] px-1 py-0 h-5",
                                             item.severity === 'high' ? "text-red-400 border-red-900 bg-red-900/20" :
-                                            item.severity === 'medium' ? "text-amber-400 border-amber-900 bg-amber-900/20" :
+                                            item.severity === 'medium' ? "text-orange-400 border-orange-900 bg-orange-900/20" :
                                             "text-green-400 border-green-900 bg-green-900/20"
                                         )}>Score: {item.score}</Badge>
                                         <span className="text-[10px] text-slate-400">{new Date(item.timestamp).toLocaleTimeString()}</span>
@@ -544,7 +389,7 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
 
         {/* Multi-URL Selector */}
         <AnimatePresence>
-            {detectedUrls.length > 1 && autoDetectUrl && !manualUrlInput && (
+            {detectedUrls.length > 1 && autoDetectUrl && (
                 <motion.div
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
@@ -560,12 +405,13 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
                                 key={idx}
                                 onClick={() => handleSelectDetectedUrl(idx)}
                                 className={cn(
-                                    "text-xs px-2 py-1 rounded-md border truncate max-w-[200px] transition-colors",
+                                    "text-xs px-2 py-1 rounded-md border truncate max-w-[200px] transition-all flex items-center",
                                     selectedDetectedUrlIndex === idx
-                                        ? "bg-blue-100 border-blue-300 text-blue-800 font-medium"
+                                        ? "bg-blue-100 border-blue-300 text-blue-800 font-medium ring-1 ring-blue-200"
                                         : "bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100"
                                 )}
                             >
+                                <div className={cn("w-2 h-2 rounded-full mr-2", selectedDetectedUrlIndex === idx ? "bg-blue-500" : "bg-slate-300")}/>
                                 {u}
                             </button>
                         ))}
@@ -574,14 +420,8 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
             )}
         </AnimatePresence>
 
-        <AnimatePresence>
           {showUrlInput && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              className="overflow-visible mt-3"
-            >
+            <div className="overflow-visible mt-3">
               <div className="relative group">
                   <Input
                     data-testid="url-input"
@@ -618,12 +458,11 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
                       </div>
                   )}
               </div>
-            </motion.div>
+            </div>
           )}
-        </AnimatePresence>
 
         <Button
-          onClick={handleAnalyze}
+          onClick={() => handleAnalyze()}
           data-testid="analyze-button"
           disabled={isAnalyzing || ((!text || !text.trim()) && (!url || !url.trim()))}
           aria-disabled={isAnalyzing || ((!text || !text.trim()) && (!url || !url.trim()))}
@@ -700,7 +539,7 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
                 </div>
 
                 <TabsContent value="results">
-                   <Card className="border-slate-100 shadow-2xl shadow-slate-200/50 overflow-hidden ring-1 ring-slate-100">
+                   <Card className={cn("border-slate-100 shadow-2xl shadow-slate-200/50 overflow-hidden ring-1 ring-slate-100", getSeverity(result.score).borderColor)}>
                      <CardContent className="p-0">
 
                        {/* Result Header */}
@@ -721,7 +560,7 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
                                     />
                                     <motion.circle
                                       className={cn(
-                                        result.score < 30 ? "text-green-500" : result.score < 70 ? "text-amber-500" : "text-red-500"
+                                        result.score <= 30 ? "text-green-500" : result.score <= 70 ? "text-orange-500" : "text-red-500"
                                       )}
                                       strokeWidth="8"
                                       strokeDasharray={289}
@@ -789,7 +628,7 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
                        {/* Analysis Content */}
                        <div className="p-8 pt-6 space-y-8">
                            {/* Why Flagged */}
-                           {result.reasons.length > 0 && (
+                           {result.reasons.length > 0 ? (
                              <div className="" data-testid="reasons-list">
                                <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center">
                                    {t('results.whyFlagged')}
@@ -801,7 +640,9 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
 
                                    // Look up rule severity
                                    const rule = (rulesData.textRules.find(r => r.id === reason) || rulesData.urlRules.find(r => r.id === reason));
-                                   const severity = rule ? rule.severity : 50; // default medium if not found
+                                   let severity = rule ? rule.severity : 50;
+                                   // Overrides for specific hardcoded rules
+                                   if (['ip_address_url', 'login_keyword', 'homograph_risk'].includes(reason)) severity = 70;
 
                                    const isHigh = severity >= 60;
                                    const isMedium = severity >= 30 && severity < 60;
@@ -810,7 +651,7 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
                                    const colorClass = isHigh
                                         ? "bg-red-50 text-red-600"
                                         : isMedium
-                                            ? "bg-amber-50 text-amber-600"
+                                            ? "bg-orange-50 text-orange-600"
                                             : "bg-blue-50 text-blue-600";
 
                                    const Icon = isHigh ? ShieldAlert : isMedium ? AlertTriangle : Info;
@@ -842,6 +683,13 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
                                  })}
                                </div>
                              </div>
+                           ) : (
+                               // Safe State
+                               <div className="flex flex-col items-center justify-center p-6 bg-green-50 rounded-xl border border-green-100">
+                                   <ShieldCheck size={48} className="text-green-500 mb-2"/>
+                                   <h3 className="text-lg font-bold text-green-800">No specific threats detected</h3>
+                                   <p className="text-sm text-green-700">The content appears safe based on our current heuristics.</p>
+                               </div>
                            )}
 
                            {/* Tags */}
@@ -866,7 +714,7 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
                                    // Actions for URL based threats
                                    ['verify', 'noClick', 'block'].map((actionKey) => (
                                      <div key={actionKey} className="flex items-start">
-                                       <div className="flex-shrink-0 mt-0.5 w-6 h-6 rounded-full bg-green-100 text-green-600 flex items-center justify-center mr-3 shadow-sm border border-green-200">
+                                       <div className="flex-shrink-0 mt-0.5 w-6 h-6 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center mr-3 shadow-sm border border-slate-300">
                                          <Check size={14} strokeWidth={3} />
                                        </div>
                                        <span className="text-slate-700 font-medium py-0.5">{t(`results.actions.${actionKey}`)}</span>
@@ -876,7 +724,7 @@ export default function ScamChecker({ locale }: ScamCheckerProps) {
                                    // Actions for Text-only threats
                                     ['verify', 'block'].map((actionKey) => (
                                      <div key={actionKey} className="flex items-start">
-                                       <div className="flex-shrink-0 mt-0.5 w-6 h-6 rounded-full bg-green-100 text-green-600 flex items-center justify-center mr-3 shadow-sm border border-green-200">
+                                       <div className="flex-shrink-0 mt-0.5 w-6 h-6 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center mr-3 shadow-sm border border-slate-300">
                                          <Check size={14} strokeWidth={3} />
                                        </div>
                                        <span className="text-slate-700 font-medium py-0.5">{t(`results.actions.${actionKey}`)}</span>
